@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.4.0.final using JasperReports Library version 6.4.1  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="studentExamination" pageWidth="700" pageHeight="842" columnWidth="660" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="657a4a26-b703-44f7-978b-de40500e9bfb">
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="studentName" class="java.lang.String"/>
+	<field name="examinationDescription" class="java.lang.String"/>
+	<field name="company" class="java.lang.String"/>
+	<field name="statusDescription" class="java.lang.String"/>
+	<field name="pass" class="java.lang.String"/>
+	<field name="dateOn" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="20">
+			<staticText>
+				<reportElement x="0" y="0" width="130" height="20" uuid="3eb20386-4d45-4e4e-a717-5934aed09cc6"/>
+				<text><![CDATA[Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="130" y="0" width="125" height="20" uuid="d5e35c6c-1510-4eb6-9bd9-e06812542b1d"/>
+				<text><![CDATA[Examination]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="255" y="0" width="100" height="20" uuid="be85517c-1d6c-44e0-87ca-0872aa9e50a5"/>
+				<text><![CDATA[Company]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="355" y="0" width="100" height="20" uuid="483d9b21-bf0c-43b9-8c99-ee8cbde37552"/>
+				<text><![CDATA[Status]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="455" y="0" width="100" height="20" uuid="3456d08a-156b-4be1-b9f7-58184cac966d"/>
+				<text><![CDATA[Result]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="555" y="0" width="105" height="20" uuid="dbc191e1-b1af-4629-bad7-8ee61b2f1d1b"/>
+				<text><![CDATA[Date]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="22" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="130" height="20" uuid="5a2ef1d7-43f9-49d2-8538-d7e3b3dc0599"/>
+				<textFieldExpression><![CDATA[$F{studentName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="130" y="0" width="125" height="20" uuid="36c22752-314d-4b01-a794-2b343abb896f"/>
+				<textFieldExpression><![CDATA[$F{examinationDescription}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="255" y="0" width="100" height="20" uuid="4e29ddd3-43e8-4bbe-ab1f-256a46e7cd71"/>
+				<textFieldExpression><![CDATA[$F{company}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="355" y="0" width="100" height="20" uuid="1f25c379-e72b-458a-9032-9d4e7c528da5"/>
+				<textFieldExpression><![CDATA[$F{statusDescription}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="455" y="0" width="100" height="20" uuid="e9361b5f-9b58-48ed-a7ea-e33926609be1"/>
+				<textFieldExpression><![CDATA[$F{pass}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="555" y="0" width="105" height="20" uuid="42d04eec-5e69-41e9-8d81-5d79d10094dd"/>
+				<textFieldExpression><![CDATA[$F{dateOn}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

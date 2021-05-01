@@ -1,0 +1,80 @@
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <button id="btnSysUserAdd" type="button" class="btn btn-block bg-gradient-primary btn-sm" style="width:12%;float:left">
+                    <i class="fa fa-plus"></i> Add New
+                </button>
+                <table id="sysUserTable" class="table table-bordered table-striped">
+                    <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Title</th>
+                        <th>Name</th>
+                        <th>Status</th>
+                        <th>Created By</th>
+                        <th>Created On</th>
+                        <th>Updated By</th>
+                        <th>Updated On</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+
+                </table>
+            </div>
+            <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+        <!-- /.card -->
+    </div>
+    <!-- /.col -->
+</div>
+
+
+<div class="modal fade" id="sysUserModal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="formHeading">Add System User</h4>
+            </div>
+            <div class="modal-body">
+
+                    <div class="form-group ">
+                        <label for="username">Username<span style="color: red">*</span></label>
+                        <input type="text" maxlength="100" name="username" class="form-control form-control-sm" id="username" aria-describedby="username-error" aria-invalid="false"/>
+                        <span id="username-error" class="error invalid-feedback"></span>
+                    </div>
+                    <div class="form-group ">
+                        <label for="status">Title</label>
+                        <select class="form-control form-control-sm" id="title">
+
+                        </select>
+                        <span id="title-error" class="error invalid-feedback"></span>
+                    </div>
+                    <div class="form-group ">
+                        <label for="name">Name<span style="color: red">*</span></label>
+                        <input maxlength="100" type="text" name="name" class="form-control form-control-sm" id="name" aria-describedby="name-error" aria-invalid="false"/>
+                        <span id="name-error" class="error invalid-feedback"></span>
+                    </div>
+                    <div class="form-group ">
+                        <label for="status">Status</label>
+                        <select class="form-control form-control-sm" id="status">
+
+                        </select>
+                        <span id="status-error" class="error invalid-feedback"></span>
+                    </div>
+
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button id="btnCancel" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button id="btnSave" type="button" class="btn btn-primary">Save</button>
+                <button id="btnUpdate" type="button" style="display: none;" class="btn btn-primary">Update</button>
+                <button id="btnDelete" type="button" style="display: none;" class="btn btn-danger">Delete</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<script src="/js/sysUser.js"></script>

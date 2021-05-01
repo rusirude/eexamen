@@ -1,0 +1,102 @@
+<div class="row" xmlns:th="http://www.thymeleaf.org">
+    <div class="col-12">
+        <input id="studentExam" type="hidden" th:value="${id}"/>
+        <input id="current" type="hidden" th:value="${current}"/>
+        <div class="card">
+            <div class="card-body">
+                <div>
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-9">
+                                    <div class="progress">
+                                        <div id="timer" class="progress-bar bg-primary progress-bar-striped" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                                            0%
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="timerVal" class="col-1" style="padding-right: 0px">
+                                    <h5 id="countUp">00:00</h5>
+                                </div>
+                                <div class="col-2">
+                                    <h5>Resterende tijd</h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-9">
+                                    <div class="progress">
+                                        <div id="noDone" class="progress-bar bg-primary progress-bar-striped" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                                            0%
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-1">
+                                    <h5 id="noDoneQnt">0/0</h5>
+                                </div>
+                                <div class="col-2">
+                                    <h5>Vragen ingevuld</h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="questionSection">
+
+                    </div>
+                    <div class="card">
+                        <div class="card-body">
+                            <div>
+                                <button id="previous" type="button" class="btn btn-primary" onclick="clickPreviousBtn()">Vorige</button>
+<!--                                <button id="savePrevious" type="button" class="btn btn-primary" onclick="clickPreviousAndSaveBtn()">Save and Previous</button>-->
+<!--                                <button id="saveNext" type="button" class="btn btn-primary" onclick="clickNextAndSaveBtn()">Save and Next</button>-->
+                                <button id="next" type="button" class="btn btn-primary" onclick="clickNextBtn()">Volgende</button>
+                                <button type="button" class="btn btn-success" onclick="finalSubmit()" style="float: right">Examen Indienen</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+        <!-- /.card -->
+    </div>
+    <!-- /.col -->
+</div>
+
+<div class="modal fade" id="stopAlert">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-body">
+                <p style="text-align: center">De tijdslimiet van uw examen is afgelopen. Het examen is hierbij gedaan en zal afgesloten worden.</p>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button onclick="finishExam()" type="button" class="btn btn-primary">Beëindig examen</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+<div class="modal fade" id="submitAlert">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-body">
+                <p style="text-align: center">U staat op het punt uw examen in te dienen, waardoor u uw examen beëindigd. Bent u zeker ?</p>
+                <p style="text-align: center" id="remainingQes"></p>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Nee, ik wil mijn examen verderzetten</button>
+                <button onclick="finishExam()" type="button" class="btn btn-primary">Ja, ik wil mijn examen indienen</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+<script src="/js/startExams.js"></script>

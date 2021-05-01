@@ -1,0 +1,63 @@
+<div class="row" xmlns:th="http://www.thymeleaf.org">
+    <div class="col-12">
+        <input type="hidden" id="se" th:value="${id}" />
+        <div class="card">
+            <div class="card-body row">
+
+                <div class="col-3"></div>
+                <div class="col-6">
+                    <div class="card">
+                        <!-- Add the bg color to the header using any of the bg-* classes -->
+                        <div style="padding:3%;color: white;background-color: #343a40;">
+                            <!-- /.widget-user-image -->
+                            <h5>Naam : <span th:text="${data.getName()}"></span></h5>
+                            <h5>Plaats : <span th:text="${data.getLocation()}"></span></h5>
+                            <h5>Datum : <span th:text="${data.getDateOn()}"></span></h5>
+                            <h5>Type examen : <span th:text="${data.getType()}"></span></h5>
+                            <h5>Aantal vragen : <span th:text="${data.getTotal()}"></span></h5>
+                            <h5>Percentage : <span th:text="${data.getFinalMark()+'%'}"></span></h5>
+                            <h4 th:style="${data.getPassed() ? 'color: green;' : 'color: red;'}" th:text="${data.getPass()}"></h4>
+                        </div>
+                        <div class="card-footer">
+                            <div class="row">
+                                <div class="col-sm-4 border-right" style="color: green">
+                                    <div class="description-block">
+                                        <h5 class="description-header" th:text="${data.getCorrect()}"></h5>
+                                        <span class="description-text">Vragen correct beantwoord</span>
+                                    </div>
+                                    <!-- /.description-block -->
+                                </div>
+                                <!-- /.col -->
+                                <div class="col-sm-4 border-right" style="color: red">
+                                    <div class="description-block">
+                                        <h5 class="description-header" th:text="${data.getWrong()}"></h5>
+                                        <span class="description-text">Vragen foutief beantwoord</span>
+                                    </div>
+                                    <!-- /.description-block -->
+                                </div>
+                                <!-- /.col -->
+                                <div class="col-sm-4">
+                                    <div class="description-block" style="color: black">
+                                        <h5 class="description-header" th:text="${data.getNotAnswered()}"></h5>
+                                        <span class="description-text">Vragen niet beantwoord</span>
+                                    </div>
+                                    <!-- /.description-block -->
+                                </div>
+                                <!-- /.col -->
+                            </div>
+                            <div class="row">
+<!--                                <button type="button" onclick="generateReport()">Print Details</button>-->
+                            </div>
+                            <!-- /.row -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-3"></div>
+            </div>
+        </div>
+    </div>
+    <!-- /.col -->
+</div>
+
+<script src="/js/finalResult.js"></script>

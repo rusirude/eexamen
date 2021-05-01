@@ -1,0 +1,115 @@
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5><b>Email for Final Result</b></h5>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+                <div class="form-group col-sm-12" style="padding: 0px">
+                    <label for="EFR_S">Mail Subject<span style="color: red">*</span></label>
+                    <input type="hidden" id="EFR_CODE"/>
+                    <input maxlength="100" id="EFR_S" name="EFR_S" type="text"
+                           class="form-control form-control-sm" aria-describedby="EFR_S-error"
+                           aria-invalid="false"/>
+                    <span id="EFR_S-error" class="error invalid-feedback"></span>
+                </div>
+                <div class="form-group col-sm-12" style="padding: 0px">
+                    <label for="EFR_C">Content</label>
+                    <textarea id="EFR_C" class="form-control" rows="3"></textarea>
+                </div>
+                <div class="custom-control custom-checkbox" style="margin-bottom: 2%">
+                    <input type="checkbox" class="custom-control-input" id="EFR_E"/>
+                    <label class="custom-control-label" for="EFR_E">Enable</label>
+                </div>
+                <p style="margin-bottom: 0px"><b>Key Word</b></p>
+                <p style="margin-bottom: 0px"><b style="color: green">@StudentName</b> for Student Name</p>
+                <p style="margin-bottom: 0px"><b style="color: green">@ExamName</b>for Examination Name</p>
+            </div>
+            <div class="card-footer">
+                <button type="button" class="btn btn-primary" onclick="saveEmailData('EFR')">Save</button>
+            </div>
+            <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+        <!-- /.card -->
+    </div>
+    <!-- /.col -->
+</div>
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5><b>Email for Student Registration</b></h5>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+                <div class="form-group col-sm-12" style="padding: 0px">
+                    <label for="EFSR_S">Mail Subject<span style="color: red">*</span></label>
+                    <input type="hidden" id="EFSR_CODE"/>
+                    <input maxlength="100" id="EFSR_S" name="EFSR_S" type="text"
+                           class="form-control form-control-sm" aria-describedby="EFSR_S-error"
+                           aria-invalid="false"/>
+                    <span id="EFSR_S-error" class="error invalid-feedback"></span>
+                </div>
+                <div class="form-group col-sm-12" style="padding: 0px">
+                    <label for="EFSR_C">Content</label>
+                    <textarea id="EFSR_C" class="form-control" rows="3"></textarea>
+                </div>
+                <div class="custom-control custom-checkbox" style="margin-bottom: 2%">
+                    <input type="checkbox" class="custom-control-input" id="EFSR_E"/>
+                    <label class="custom-control-label" for="EFSR_E">Enable</label>
+                </div>
+                <p style="margin-bottom: 0px"><b>Key Word</b></p>
+                <p style="margin-bottom: 0px"><b style="color: green">@Username</b> for Username</p>
+                <p style="margin-bottom: 0px"><b style="color: green">@Password</b>for Password</p>
+            </div>
+            <div class="card-footer">
+                <button type="button" class="btn btn-primary" onclick="saveEmailData('EFSR')">Save</button>
+            </div>
+            <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+        <!-- /.card -->
+    </div>
+    <!-- /.col -->
+</div>
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5><b>Email for Password Reset</b></h5>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+                <div class="form-group col-sm-12" style="padding: 0px">
+                    <label for="EFPR_S">Mail Subject<span style="color: red">*</span></label>
+                    <input type="hidden" id="EFPR_CODE"/>
+                    <input maxlength="100" id="EFPR_S" name="EFPR_S" type="text"
+                           class="form-control form-control-sm" aria-describedby="EFPR_S-error"
+                           aria-invalid="false"/>
+                    <span id="EFPR_S-error" class="error invalid-feedback"></span>
+                </div>
+                <div class="form-group col-sm-12" style="padding: 0px">
+                    <label for="EFPR_C">Content</label>
+                    <textarea id="EFPR_C" class="form-control" rows="3"></textarea>
+                </div>
+                <div class="custom-control custom-checkbox" style="margin-bottom: 2%">
+                    <input type="checkbox" class="custom-control-input" id="EFPR_E"/>
+                    <label class="custom-control-label" for="EFPR_E">Enable</label>
+                </div>
+                <p style="margin-bottom: 0px"><b>Key Word</b></p>
+                <p style="margin-bottom: 0px"><b style="color: green">@Username</b> for Username</p>
+                <p style="margin-bottom: 0px"><b style="color: green">@Password</b>for Password</p>
+            </div>
+            <div class="card-footer">
+                <button type="button" class="btn btn-primary" onclick="saveEmailData('EFPR')">Save</button>
+            </div>
+            <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+        <!-- /.card -->
+    </div>
+    <!-- /.col -->
+</div>
+<script src="/js/emailBody.js"></script>

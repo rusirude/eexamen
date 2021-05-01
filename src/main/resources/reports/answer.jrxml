@@ -1,0 +1,391 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.4.0.final using JasperReports Library version 6.4.1  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="answer" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="657a4a26-b703-44f7-978b-de40500e9bfb">
+	<style name="passStyle" forecolor="#FF0000">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[new Boolean($P{isPass} == "Geslaagd")]]></conditionExpression>
+			<style forecolor="#008000"/>
+		</conditionalStyle>
+	</style>
+	<style name="resuleStyle" forecolor="#FF0000">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[new Boolean($F{result} == "JUIST")]]></conditionExpression>
+			<style forecolor="#008000"/>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[new Boolean($F{result} == "Niet Beantwoord")]]></conditionExpression>
+			<style forecolor="#000000"/>
+		</conditionalStyle>
+	</style>
+	<parameter name="examination" class="java.lang.String"/>
+	<parameter name="category" class="java.lang.String"/>
+	<parameter name="finalMark" class="java.lang.Integer"/>
+	<parameter name="isPass" class="java.lang.String"/>
+	<parameter name="name" class="java.lang.String"/>
+	<parameter name="email" class="java.lang.String"/>
+	<parameter name="finalSummery" class="com.leaf.eexamen.dto.FinalResultDTO">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+	</parameter>
+	<parameter name="location" class="java.lang.String"/>
+	<parameter name="type" class="java.lang.String"/>
+	<parameter name="date" class="java.util.Date"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="question" class="java.lang.String"/>
+	<field name="result" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="answer" class="java.lang.String"/>
+	<field name="correct" class="java.lang.Boolean"/>
+	<field name="correctAnswer" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="190" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="550" height="30" uuid="5224000c-378e-4627-94a2-4361e8dc96fe"/>
+				<textElement>
+					<font fontName="Calibri" size="16"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Resultaat van het "+$P{examination}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="110" y="50" width="280" height="20" uuid="1a910d4e-b738-48f1-b6dd-6a85e04a074a"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="passStyle" x="404" y="113" width="130" height="30" uuid="34b02ba4-ffbb-4695-b5de-335d8f448970"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="16"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{isPass}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="110" y="90" width="280" height="20" uuid="850eb796-2bd6-4acb-bcae-9aa08e299c1b"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{examination}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="passStyle" x="404" y="73" width="130" height="40" uuid="89ae66dd-1ff4-4821-9720-1303ccb12eeb"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="28"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{finalMark} + "%"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="110" y="70" width="280" height="20" uuid="d5c6b67e-9f3a-4e41-a123-bbac59e4d372"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{email}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="50" width="100" height="20" uuid="5163782f-4e44-4c67-9f50-5243221c9959"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" size="12"/>
+				</textElement>
+				<text><![CDATA[Naam]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="70" width="100" height="20" uuid="6cf8ec1d-09c9-4f27-9941-6a0dc569a3b9"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" size="12"/>
+				</textElement>
+				<text><![CDATA[Email]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="90" width="100" height="20" uuid="d529c811-08a6-416d-9af5-877566840661"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" size="12"/>
+				</textElement>
+				<text><![CDATA[Examen]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="100" y="50" width="10" height="20" uuid="ea4fa991-73a6-4201-8048-8b6c847fc8a8"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="12"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="100" y="70" width="10" height="20" uuid="2a1aa8c5-b25a-4ad1-8c67-c03a9aea68d7"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="12"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="100" y="90" width="10" height="20" uuid="41f5bace-ad6c-4877-b90a-8134f45ed012"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="12"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="110" y="130" width="280" height="20" uuid="425199f6-06f7-4edf-a1cc-c4ae027a917f"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{location}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="110" y="110" width="280" height="20" uuid="773572e3-d41c-4e64-8832-56113984e719"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{type}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="110" width="100" height="20" uuid="c7846ae8-9320-4dbc-ac2e-87957baec3a5"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" size="12"/>
+				</textElement>
+				<text><![CDATA[Type examen]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="130" width="100" height="20" uuid="9410d3be-1694-495c-97e1-85a3b8e953ec"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" size="12"/>
+				</textElement>
+				<text><![CDATA[Plaats]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="150" width="100" height="20" uuid="1d48b60c-0c1f-4f5e-9a5f-0d0cb301fcfd"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" size="12"/>
+				</textElement>
+				<text><![CDATA[Datum]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="100" y="110" width="10" height="20" uuid="b731490a-4e80-465a-8376-2c6296aa859d"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="12"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="100" y="130" width="10" height="20" uuid="cbea623f-5de3-4fac-8c4d-d79e740d79ef"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="12"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="100" y="150" width="10" height="20" uuid="1ff7fc9f-372b-47f6-9f9e-030b64628de3"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="12"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="110" y="150" width="280" height="20" uuid="947bdcf7-5025-4429-a462-0782e392ffec"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{date}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="23" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="3" width="196" height="20" uuid="5a02ee3f-bf7f-4481-b3d8-dddc255e9982"/>
+				<box leftPadding="4">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" size="12"/>
+				</textElement>
+				<text><![CDATA[Vraag]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="196" y="3" width="134" height="20" uuid="ec492cd4-20f8-4374-93a9-89858adc467e">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box leftPadding="4">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" size="12"/>
+				</textElement>
+				<text><![CDATA[Uw antwoord]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="330" y="3" width="90" height="20" uuid="f8fc895d-3358-446e-bff0-3159064ae3f8"/>
+				<box leftPadding="4">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" size="12"/>
+				</textElement>
+				<text><![CDATA[Resultaat]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="420" y="3" width="134" height="20" uuid="b19018b1-fbd5-4c48-a323-a8df5d8f4b01">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box leftPadding="4">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" size="12"/>
+				</textElement>
+				<text><![CDATA[Juist antwoord]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="19" splitType="Stretch">
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="196" height="18" uuid="116179a9-f80a-4ffd-b875-f32b47072e18"/>
+				<box leftPadding="5">
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{question}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="resuleStyle" stretchType="RelativeToTallestObject" x="330" y="0" width="90" height="18" uuid="a32299a8-5417-4c14-92e7-59e0846f99cb"/>
+				<box leftPadding="5">
+					<pen lineColor="#000000"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{result}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="196" y="0" width="134" height="18" uuid="e620d9c1-8e06-48ac-8ed6-a3e6cdfe4c03"/>
+				<box leftPadding="5">
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{answer}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="420" y="0" width="134" height="18" uuid="d9580ffe-289c-43e0-9943-38caf71b4bca"/>
+				<box leftPadding="5">
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" size="12" isBold="true" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{correctAnswer}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="104" splitType="Stretch">
+			<staticText>
+				<reportElement x="150" y="36" width="10" height="20" uuid="77cdabc6-47b5-4b51-9366-2190b7717733"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="12"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="150" y="56" width="10" height="20" uuid="f265a291-fce6-460d-b978-9138bf248d83"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="12"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="150" y="16" width="10" height="20" uuid="60838e28-b381-466c-93e3-ab5c18e78cba"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="12"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="16" width="149" height="20" uuid="910c0179-b71d-4066-a249-f5656fe4f509"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" size="12"/>
+				</textElement>
+				<text><![CDATA[Vragen correct beantwoord]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="36" width="149" height="20" uuid="ebd0b9e4-7527-42d0-b6f3-f01627620535"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" size="12"/>
+				</textElement>
+				<text><![CDATA[Vragen foutief beantwoord]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="56" width="149" height="20" uuid="ac5e60f8-4ad0-41f5-8f5c-84a9dcde2d2d"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" size="12"/>
+				</textElement>
+				<text><![CDATA[Vragen niet beantwoord]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="160" y="16" width="100" height="20" uuid="42e1ac6a-6cf1-4e0f-afcf-87357bf5cbd2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Calibri" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{finalSummery}.getCorrect()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="160" y="36" width="100" height="20" uuid="a59861ea-fb03-4e01-8bc3-5016f3a1a220"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Calibri" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{finalSummery}.getWrong()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="160" y="56" width="100" height="20" uuid="634efa3e-7019-46ad-8eb8-d6b0282d1093"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Calibri" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{finalSummery}.getNotAnswered()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="1" y="76" width="149" height="20" uuid="f158086e-d009-49ca-8383-9708ba55c756"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" size="12"/>
+				</textElement>
+				<text><![CDATA[Totaal]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="150" y="76" width="10" height="20" uuid="0efe45f1-8e3f-4381-944b-9cc8c6340811"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="12"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="160" y="76" width="100" height="20" uuid="80b4f9e4-0d81-480f-8ef9-310c51302c8e"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Calibri" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{finalSummery}.getTotal()]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>
