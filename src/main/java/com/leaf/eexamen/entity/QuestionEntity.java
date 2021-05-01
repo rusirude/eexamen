@@ -1,53 +1,24 @@
 package com.leaf.eexamen.entity;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
 import javax.persistence.*;
 
+@EqualsAndHashCode(callSuper = true)
+@Data
 @Entity
 @Table(name = "question")
 public class QuestionEntity extends CommonEntity{
-	
-	private Long id;
-    private String code;
-	private String description;
-    private StatusEntity statusEntity;
 
-
-    @Id
+	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	public Long getId() {
-		return id;
-	}
-    
-	public void setId(Long id) {
-		this.id = id;
-	}
-	
+	private Long id;
 	@Column(name = "code", length = 10, nullable = false)
-	public String getCode() {
-		return code;
-	}
-	
-	public void setCode(String code) {
-		this.code = code;
-	}
-	
+    private String code;
 	@Column(name = "description", length = 50, nullable = false)
-	public String getDescription() {
-		return description;
-	}
-	
-	public void setDescription(String description) {
-		this.description = description;
-	}
-	
+	private String description;
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name =  "status" , nullable = false)
-	public StatusEntity getStatusEntity() {
-		return statusEntity;
-	}
-	
-	public void setStatusEntity(StatusEntity statusEntity) {
-		this.statusEntity = statusEntity;
-	}
-
+    private StatusEntity statusEntity;
 }

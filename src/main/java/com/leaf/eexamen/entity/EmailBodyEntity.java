@@ -1,52 +1,25 @@
 package com.leaf.eexamen.entity;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+@EqualsAndHashCode(callSuper = true)
+@Data
 @Entity
 @Table(name = "email_body")
 public class EmailBodyEntity extends CommonEntity {
-    private String code;
-    private String subject;
-    private String content;
-    private Boolean enable;
-
     @Id
     @Column(name = "code", length = 20, nullable = false, unique = true)
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
+    private String code;
     @Column(name = "subject")
-    public String getSubject() {
-        return subject;
-    }
-
-    public void setSubject(String subject) {
-        this.subject = subject;
-    }
-
+    private String subject;
     @Column(name = "content")
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
+    private String content;
     @Column(name = "enable")
-    public Boolean getEnable() {
-        return enable;
-    }
-
-    public void setEnable(Boolean enable) {
-        this.enable = enable;
-    }
+    private Boolean enable;
 }

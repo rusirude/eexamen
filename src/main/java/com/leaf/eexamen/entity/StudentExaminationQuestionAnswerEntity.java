@@ -1,84 +1,33 @@
 package com.leaf.eexamen.entity;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
 import javax.persistence.*;
 
+@EqualsAndHashCode(callSuper = true)
+@Data
 @Entity
 @Table(name = "student_examination_question_answer")
 public class StudentExaminationQuestionAnswerEntity extends CommonEntity {
 
-    private Long id;
-    private Integer seq;
-    private StudentExaminationEntity studentExaminationEntity;
-    private QuestionEntity questionEntity;
-    private QuestionAnswerEntity questionAnswerEntity;
-    private boolean correct;
-    private QuestionAnswerEntity correctQuestionAnswerEntity;
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
+    private Long id;
     @Column(name = "seq")
-    public Integer getSeq() {
-        return seq;
-    }
-
-    public void setSeq(Integer seq) {
-        this.seq = seq;
-    }
-
+    private Integer seq;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name =  "student_examination" , nullable = false)
-    public StudentExaminationEntity getStudentExaminationEntity() {
-        return studentExaminationEntity;
-    }
-
-    public void setStudentExaminationEntity(StudentExaminationEntity studentExaminationEntity) {
-        this.studentExaminationEntity = studentExaminationEntity;
-    }
-
+    private StudentExaminationEntity studentExaminationEntity;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name =  "question" , nullable = false)
-    public QuestionEntity getQuestionEntity() {
-        return questionEntity;
-    }
-
-    public void setQuestionEntity(QuestionEntity questionEntity) {
-        this.questionEntity = questionEntity;
-    }
-
+    private QuestionEntity questionEntity;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name =  "question_answer" , nullable = false)
-    public QuestionAnswerEntity getQuestionAnswerEntity() {
-        return questionAnswerEntity;
-    }
-
-    public void setQuestionAnswerEntity(QuestionAnswerEntity questionAnswerEntity) {
-        this.questionAnswerEntity = questionAnswerEntity;
-    }
-
+    private QuestionAnswerEntity questionAnswerEntity;
     @Column(name = "correct")
-    public boolean isCorrect() {
-        return correct;
-    }
-
-    public void setCorrect(boolean correct) {
-        this.correct = correct;
-    }
-
+    private boolean correct;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name =  "correct_question_answer" , nullable = false)
-    public QuestionAnswerEntity getCorrectQuestionAnswerEntity() {
-        return correctQuestionAnswerEntity;
-    }
-
-    public void setCorrectQuestionAnswerEntity(QuestionAnswerEntity correctQuestionAnswerEntity) {
-        this.correctQuestionAnswerEntity = correctQuestionAnswerEntity;
-    }
+    private QuestionAnswerEntity correctQuestionAnswerEntity;
 }

@@ -1,100 +1,33 @@
 package com.leaf.eexamen.entity;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
 import javax.persistence.*;
 
+@EqualsAndHashCode(callSuper = true)
+@Data
 @Entity
 @Table(name="student")
 public class StudentEntity extends CommonEntity{
-    private String username;
-    private String initialPassword;
-    private String email;
-    private String telephone;
-    private String address;
-    private String company;
-    private CityEntity cityEntity;
-    private String zipCode;
-    private String vat;
-
     @Id
     @Column(name  = "username", length = 25 , nullable = false , unique = true)
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
+    private String username;
     @Column(name = "initial_password")
-    public String getInitialPassword() {
-        return initialPassword;
-    }
-
-    public void setInitialPassword(String initialPassword) {
-        this.initialPassword = initialPassword;
-    }
-
+    private String initialPassword;
     @Column(name  = "email")
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
+    private String email;
     @Column(name  = "telephone")
-    public String getTelephone() {
-        return telephone;
-    }
-
-    public void setTelephone(String telephone) {
-        this.telephone = telephone;
-    }
-
+    private String telephone;
     @Column(name  = "address")
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
+    private String address;
     @Column(name  = "company")
-    public String getCompany() {
-        return company;
-    }
-
-    public void setCompany(String company) {
-        this.company = company;
-    }
-
+    private String company;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name =  "city" , nullable = false)
-    public CityEntity getCityEntity() {
-        return cityEntity;
-    }
-
-    public void setCityEntity(CityEntity cityEntity) {
-        this.cityEntity = cityEntity;
-    }
-
+    private CityEntity cityEntity;
     @Column(name  = "zip_code")
-    public String getZipCode() {
-        return zipCode;
-    }
-
-    public void setZipCode(String zipCode) {
-        this.zipCode = zipCode;
-    }
-
+    private String zipCode;
     @Column(name  = "vat")
-    public String getVat() {
-        return vat;
-    }
-
-    public void setVat(String vat) {
-        this.vat = vat;
-    }
+    private String vat;
 }
