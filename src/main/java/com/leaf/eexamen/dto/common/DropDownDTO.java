@@ -1,5 +1,8 @@
 package com.leaf.eexamen.dto.common;
 
+import lombok.Data;
+
+@Data
 public class DropDownDTO<T> {
 	
 	private String code;
@@ -18,26 +21,4 @@ public class DropDownDTO<T> {
 		this.description = description;
 		this.data = data;
 	}
-
-	public String getCode() {
-		return code;
-	}
-	public void setCode(String code) {
-		this.code = code;
-	}
-	public String getDescription() {
-		return description;
-	}
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public T getData() {
-		return data;
-	}
-
-	public void setData(T data) {
-		this.data = data;
-	}
-
 }

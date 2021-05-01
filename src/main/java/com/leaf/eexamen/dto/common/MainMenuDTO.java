@@ -1,23 +1,15 @@
 package com.leaf.eexamen.dto.common;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
 import java.util.List;
 
 /**
  * @author : rusiru on 7/6/19.
  */
+@Data
+@AllArgsConstructor
 public class MainMenuDTO {
-
     private List<MenuSectionDTO> menuSectionDTOs;
-
-    public MainMenuDTO(List<MenuSectionDTO> menuSectionDTOs) {
-        this.menuSectionDTOs = menuSectionDTOs;
-    }
-
-    public List<MenuSectionDTO> getMenuSectionDTOs() {
-        return menuSectionDTOs;
-    }
-
-    public void setMenuSectionDTOs(List<MenuSectionDTO> menuSectionDTOs) {
-        this.menuSectionDTOs = menuSectionDTOs;
-    }
 }
