@@ -16,6 +16,8 @@ import com.leaf.eexamen.enums.StatusCategoryEnum;
 import com.leaf.eexamen.service.ExaminationService;
 import com.leaf.eexamen.utility.CommonConstant;
 import com.leaf.eexamen.utility.CommonMethod;
+import lombok.AllArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +29,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Log4j2
+@AllArgsConstructor(onConstructor = @__(@Autowired))
 public class ExaminationImpl implements ExaminationService {
 
 	private ExaminationDAO examinationDAO;
@@ -37,15 +41,6 @@ public class ExaminationImpl implements ExaminationService {
 
 	private CommonMethod commonMethod;
 
-	@Autowired
-	public ExaminationImpl(ExaminationDAO examinationDAO, StatusDAO statusDAO, QuestionCategoryDAO questionCategoryDAO, QuestionQuestionCategoryDAO questionQuestionCategoryDAO, StatusCategoryDAO statusCategoryDAO, CommonMethod commonMethod) {
-		this.examinationDAO = examinationDAO;
-		this.statusDAO = statusDAO;
-		this.questionCategoryDAO = questionCategoryDAO;
-		this.questionQuestionCategoryDAO = questionQuestionCategoryDAO;
-		this.statusCategoryDAO = statusCategoryDAO;
-		this.commonMethod = commonMethod;
-	}
 
 
 	/**
@@ -55,7 +50,7 @@ public class ExaminationImpl implements ExaminationService {
 	@Transactional
 	public ResponseDTO<ExaminationDTO> saveExamination(ExaminationDTO examinationDTO) {
 		String code = ResponseCodeEnum.FAILED.getCode();
-		String description = "Examination Save Faield";
+		String description = "Examination Save Failed";
 
 		ExaminationEntity examinationEntity;
 		try {
@@ -88,9 +83,9 @@ public class ExaminationImpl implements ExaminationService {
 			}
 
 		} catch (Exception e) {
-			System.err.println("Examination Save Issue");
+			log.error(e.getMessage());
 		}
-		return new ResponseDTO<ExaminationDTO>(code, description);
+		return new ResponseDTO<>(code, description);
 	}
 
 	/**
@@ -100,7 +95,7 @@ public class ExaminationImpl implements ExaminationService {
 	@Transactional
 	public ResponseDTO<ExaminationDTO> updateExamination(ExaminationDTO examinationDTO) {
 		String code = ResponseCodeEnum.FAILED.getCode();
-		String description = "Examination Update Faield";
+		String description = "Examination Update Failed";
 		try {
 			StatusEntity statusEntity = statusDAO.findStatusEntityByCode(examinationDTO.getStatusCode());
 			QuestionCategoryEntity questionCategoryEntity = questionCategoryDAO.findQuestionCategoryEntityByCode(examinationDTO.getQuestionCategoryCode());
@@ -125,9 +120,9 @@ public class ExaminationImpl implements ExaminationService {
 			code = ResponseCodeEnum.SUCCESS.getCode();
 			description = "Examination Update Successfully";
 		} catch (Exception e) {
-			System.err.println("Examination Update Issue");
+			log.error(e.getMessage());
 		}
-		return new ResponseDTO<ExaminationDTO>(code, description);
+		return new ResponseDTO<>(code, description);
 	}
 
 	/**
@@ -137,7 +132,7 @@ public class ExaminationImpl implements ExaminationService {
 	@Transactional
 	public ResponseDTO<ExaminationDTO> deleteExamination(ExaminationDTO examinationDTO) {
 		String code = ResponseCodeEnum.FAILED.getCode();
-		String description = "Examination Delete Faield";
+		String description = "Examination Delete Failed";
 		try {
 			StatusEntity statusEntity = statusDAO.findStatusEntityByCode(DeleteStatusEnum.DELETE.getCode());
 
@@ -151,9 +146,9 @@ public class ExaminationImpl implements ExaminationService {
 			code = ResponseCodeEnum.SUCCESS.getCode();
 			description = "Examination Delete Successfully";
 		} catch (Exception e) {
-			System.err.println("Examination Delete Issue");
+			log.error(e.getMessage());
 		}
-		return new ResponseDTO<ExaminationDTO>(code, description);
+		return new ResponseDTO<>(code, description);
 	}
 
 	/**
@@ -196,7 +191,7 @@ public class ExaminationImpl implements ExaminationService {
 			}
 
 		} catch (Exception e) {
-			System.err.println("Examination Find Issue");
+			log.error(e.getMessage());
 		}
 		return new ResponseDTO<>(code, description, dto);
 	}
@@ -211,14 +206,14 @@ public class ExaminationImpl implements ExaminationService {
 		HashMap<String, Object> map = new HashMap<>();
 		String code = ResponseCodeEnum.FAILED.getCode();
 		try {
-			List<DropDownDTO> status = statusCategoryDAO.findStatusCategoryByCode(StatusCategoryEnum.DEFAULT.getCode())
+			List<?> status = statusCategoryDAO.findStatusCategoryByCode(StatusCategoryEnum.DEFAULT.getCode())
 					.getStatusEntities()
 					.stream()
 					.sorted(Comparator.comparing(StatusEntity::getDescription))
-					.map(s -> new DropDownDTO(s.getCode(), s.getDescription()))
+					.map(s -> new DropDownDTO<>(s.getCode(), s.getDescription()))
 					.collect(Collectors.toList());
 
-			List<DropDownDTO> questionCategory = questionCategoryDAO.findAllQuestionCategoryEntities(DefaultStatusEnum.ACTIVE.getCode())
+			List<?> questionCategory = questionCategoryDAO.findAllQuestionCategoryEntities(DefaultStatusEnum.ACTIVE.getCode())
 					.stream()
 					.map(s -> {
 						Long count = questionQuestionCategoryDAO.getQuestionEntityCountByQuestionCategoryAndStatus(s.getCode(),DefaultStatusEnum.ACTIVE.getCode());
@@ -231,7 +226,7 @@ public class ExaminationImpl implements ExaminationService {
 
 			code = ResponseCodeEnum.SUCCESS.getCode();
 		} catch (Exception e) {
-			System.err.println("Examination Ref Data Issue");
+			log.error(e.getMessage());
 		}
 		return new ResponseDTO<>(code, map);
 	}
@@ -239,9 +234,9 @@ public class ExaminationImpl implements ExaminationService {
 	@Override
 	@Transactional
 	public DataTableResponseDTO getExaminationsForDataTable(DataTableRequestDTO dataTableRequestDTO) {
-		List<ExaminationDTO> list = new ArrayList<>();
+		List<ExaminationDTO> list;
 		DataTableResponseDTO responseDTO = new DataTableResponseDTO();
-		Long numOfRecord = Long.valueOf(0);
+		Long numOfRecord;
 		try {
 			list = examinationDAO.<List<ExaminationEntity>>getDataForGrid(dataTableRequestDTO, CommonConstant.GRID_SEARCH_LIST)
 					.stream().map(entity -> {
@@ -268,6 +263,7 @@ public class ExaminationImpl implements ExaminationService {
 			responseDTO.setDraw(dataTableRequestDTO.getDraw());
 
 		} catch (Exception e) {
+			log.error(e.getMessage());
 		}
 
 		return responseDTO;

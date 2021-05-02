@@ -8,6 +8,8 @@ import com.leaf.eexamen.entity.SysUserEntity;
 import com.leaf.eexamen.enums.ResponseCodeEnum;
 import com.leaf.eexamen.service.ProfileService;
 import com.leaf.eexamen.utility.CommonMethod;
+import lombok.AllArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -16,6 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.HashMap;
 
 @Service
+@Log4j2
+@AllArgsConstructor(onConstructor = @__(@Autowired))
 public class ProfileServiceImpl implements ProfileService {
 
     private SysUserDAO sysUserDAO;
@@ -26,13 +30,6 @@ public class ProfileServiceImpl implements ProfileService {
     BCryptPasswordEncoder bCryptPasswordEncoder;
 
 
-    @Autowired
-    public ProfileServiceImpl(SysUserDAO sysUserDAO, StatusDAO statusDAO, CommonMethod commonMethod, BCryptPasswordEncoder bCryptPasswordEncoder) {
-        this.sysUserDAO = sysUserDAO;
-        this.statusDAO = statusDAO;
-        this.commonMethod = commonMethod;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-    }
 
     @Override
     @Transactional
@@ -45,7 +42,7 @@ public class ProfileServiceImpl implements ProfileService {
 
             code = ResponseCodeEnum.SUCCESS.getCode();
         } catch (Exception e) {
-            System.err.println("Profile Ref Data Issue");
+            log.error(e.getMessage());
         }
         return new ResponseDTO<>(code, map);
     }
@@ -76,7 +73,7 @@ public class ProfileServiceImpl implements ProfileService {
             }
         }
         catch(Exception e) {
-            System.err.println("Profile Change Issue");
+            log.error(e.getMessage());
         }
         return new ResponseDTO<>(code,description);
     }

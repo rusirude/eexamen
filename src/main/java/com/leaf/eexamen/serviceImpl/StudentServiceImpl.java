@@ -12,6 +12,8 @@ import com.leaf.eexamen.service.StudentService;
 import com.leaf.eexamen.utility.CommonConstant;
 import com.leaf.eexamen.utility.CommonMethod;
 import com.leaf.eexamen.utility.MailSenderService;
+import lombok.AllArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
+@Log4j2
+@AllArgsConstructor(onConstructor = @__(@Autowired))
 public class StudentServiceImpl implements StudentService {
 
 
@@ -43,25 +47,6 @@ public class StudentServiceImpl implements StudentService {
 
 	BCryptPasswordEncoder bCryptPasswordEncoder;
 
-	@Autowired
-	public StudentServiceImpl(SysUserDAO sysUserDAO, SysRoleDAO sysRoleDAO, EmailBodyDAO emailBodyDAO, StatusDAO statusDAO, TitleDAO titleDAO, CityDAO cityDAO, StatusCategoryDAO statusCategoryDAO, MasterDataDAO masterDataDAO, SysUserAuthorityDAO sysUserAuthorityDAO, SysUserSysRoleDAO sysUserSysRoleDAO, StudentDAO studentDAO, StudentExaminationDAO studentExaminationDAO, ExaminationDAO examinationDAO, MailSenderService mailSenderService, CommonMethod commonMethod, BCryptPasswordEncoder bCryptPasswordEncoder) {
-		this.sysUserDAO = sysUserDAO;
-		this.sysRoleDAO = sysRoleDAO;
-		this.emailBodyDAO = emailBodyDAO;
-		this.statusDAO = statusDAO;
-		this.titleDAO = titleDAO;
-		this.cityDAO = cityDAO;
-		this.statusCategoryDAO = statusCategoryDAO;
-		this.masterDataDAO = masterDataDAO;
-		this.sysUserAuthorityDAO = sysUserAuthorityDAO;
-		this.sysUserSysRoleDAO = sysUserSysRoleDAO;
-		this.studentDAO = studentDAO;
-		this.studentExaminationDAO = studentExaminationDAO;
-		this.examinationDAO = examinationDAO;
-		this.mailSenderService = mailSenderService;
-		this.commonMethod = commonMethod;
-		this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-	}
 
 	/**
 	 * {@inheritDoc}
@@ -171,7 +156,7 @@ public class StudentServiceImpl implements StudentService {
 
 		}
 		catch(Exception e) {
-			System.err.println("Save Student User Issue");
+			log.error(e.getMessage());
 		}
 		return new ResponseDTO<>(code,description);
 	}
@@ -218,7 +203,7 @@ public class StudentServiceImpl implements StudentService {
 			description = "Student Update Successfully";
 			
 		} catch (Exception e) {
-			System.err.println("Student Update Issue");
+			log.error(e.getMessage());
 		}
 		return new ResponseDTO<>(code, description);
 	}
@@ -250,7 +235,7 @@ public class StudentServiceImpl implements StudentService {
 			code = ResponseCodeEnum.SUCCESS.getCode();
 			description = "Student Delete Successfully";
 		} catch (Exception e) {
-			System.err.println("Student Delete Issue");
+			log.error(e.getMessage());
 		}
 		return new ResponseDTO<>(code, description);
 	}
@@ -297,7 +282,7 @@ public class StudentServiceImpl implements StudentService {
 			}
 
 		} catch (Exception e) {
-			System.err.println("Student Role Find Issue");
+			log.error(e.getMessage());
 		}
 		return new ResponseDTO<>(code, description, dto);
 	}
@@ -318,15 +303,15 @@ public class StudentServiceImpl implements StudentService {
 					.collect(Collectors.toList());
 			
 			List<?> title = titleDAO.findAllTitleEntities(DefaultStatusEnum.ACTIVE.getCode())
-					.stream().map(t-> new DropDownDTO(t.getCode(), t.getDescription()))
+					.stream().map(t-> new DropDownDTO<>(t.getCode(), t.getDescription()))
 					.collect(Collectors.toList());
 			List<?> examination = examinationDAO.findAllExaminationEntities(DefaultStatusEnum.ACTIVE.getCode())
-					.stream().map(t-> new DropDownDTO(t.getCode(), t.getDescription()))
+					.stream().map(t-> new DropDownDTO<>(t.getCode(), t.getDescription()))
 					.collect(Collectors.toList());
 			List<?> city = cityDAO.findAllCityEntities(DefaultStatusEnum.ACTIVE.getCode())
 					.stream()
 					.sorted(Comparator.comparing(CityEntity::getDescription))
-					.map(t-> new DropDownDTO(t.getCode(), t.getDescription()))
+					.map(t-> new DropDownDTO<>(t.getCode(), t.getDescription()))
 					.collect(Collectors.toList());
 
 
@@ -337,9 +322,9 @@ public class StudentServiceImpl implements StudentService {
 
 			code = ResponseCodeEnum.SUCCESS.getCode();
 		} catch (Exception e) {
-			System.err.println("Sys User Ref Data Issue");
+			log.error(e.getMessage());
 		}
-		return new ResponseDTO<HashMap<String, Object>>(code, map);
+		return new ResponseDTO<>(code, map);
 	}
 	
 	/**
@@ -374,7 +359,7 @@ public class StudentServiceImpl implements StudentService {
 			responseDTO.setDraw(dataTableRequestDTO.getDraw());
 
 		} catch (Exception e) {
-			System.err.println("Student Data Table Issue");
+			log.error(e.getMessage());
 		}
 
 		return responseDTO;

@@ -16,6 +16,8 @@ import com.leaf.eexamen.enums.StatusCategoryEnum;
 import com.leaf.eexamen.service.QuestionCategoryService;
 import com.leaf.eexamen.utility.CommonConstant;
 import com.leaf.eexamen.utility.CommonMethod;
+import lombok.AllArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +29,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Log4j2
+@AllArgsConstructor(onConstructor = @__(@Autowired))
 public class QuestionCategoryServiceImpl implements QuestionCategoryService {
 
 	private QuestionCategoryDAO questionCategoryDAO;
@@ -35,14 +39,7 @@ public class QuestionCategoryServiceImpl implements QuestionCategoryService {
 
 	private CommonMethod commonMethod;
 
-	@Autowired
-	public QuestionCategoryServiceImpl(QuestionCategoryDAO questionCategoryDAO, StatusDAO statusDAO, StatusCategoryDAO statusCategoryDAO,
-									   CommonMethod commonMethod) {
-		this.questionCategoryDAO = questionCategoryDAO;
-		this.statusDAO = statusDAO;
-		this.statusCategoryDAO = statusCategoryDAO;
-		this.commonMethod = commonMethod;
-	}
+
 
 	/**
 	 * {@inheritDoc}
@@ -51,7 +48,7 @@ public class QuestionCategoryServiceImpl implements QuestionCategoryService {
 	@Transactional
 	public ResponseDTO<QuestionCategoryDTO> saveQuestionCategory(QuestionCategoryDTO questionCategoryDTO) {
 		String code = ResponseCodeEnum.FAILED.getCode();
-		String description = "QuestionCategory Save Faield";
+		String description = "QuestionCategory Save Failed";
 
 		QuestionCategoryEntity questionCategoryEntity;
 		try {
@@ -87,9 +84,9 @@ public class QuestionCategoryServiceImpl implements QuestionCategoryService {
 			}
 
 		} catch (Exception e) {
-			System.err.println("QuestionCategory Save Issue");
+			log.error(e.getMessage());
 		}
-		return new ResponseDTO<QuestionCategoryDTO>(code, description);
+		return new ResponseDTO<>(code, description);
 	}
 
 	/**
@@ -99,7 +96,7 @@ public class QuestionCategoryServiceImpl implements QuestionCategoryService {
 	@Transactional
 	public ResponseDTO<QuestionCategoryDTO> updateQuestionCategory(QuestionCategoryDTO questionCategoryDTO) {
 		String code = ResponseCodeEnum.FAILED.getCode();
-		String description = "QuestionCategory Update Faield";
+		String description = "QuestionCategory Update Failed";
 		try {
 			StatusEntity statusEntity = statusDAO.findStatusEntityByCode(questionCategoryDTO.getStatusCode());
 
@@ -114,9 +111,9 @@ public class QuestionCategoryServiceImpl implements QuestionCategoryService {
 			code = ResponseCodeEnum.SUCCESS.getCode();
 			description = "QuestionCategory Update Successfully";
 		} catch (Exception e) {
-			System.err.println("QuestionCategory Update Issue");
+			log.error(e.getMessage());
 		}
-		return new ResponseDTO<QuestionCategoryDTO>(code, description);
+		return new ResponseDTO<>(code, description);
 	}
 
 	/**
@@ -126,7 +123,7 @@ public class QuestionCategoryServiceImpl implements QuestionCategoryService {
 	@Transactional
 	public ResponseDTO<QuestionCategoryDTO> deleteQuestionCategory(QuestionCategoryDTO questionCategoryDTO) {
 		String code = ResponseCodeEnum.FAILED.getCode();
-		String description = "Question Category Delete Faield";
+		String description = "Question Category Delete Failed";
 		try {
 			StatusEntity statusEntity = statusDAO.findStatusEntityByCode(DeleteStatusEnum.DELETE.getCode());
 
@@ -140,9 +137,9 @@ public class QuestionCategoryServiceImpl implements QuestionCategoryService {
 			code = ResponseCodeEnum.SUCCESS.getCode();
 			description = "QuestionCategory Delete Successfully";
 		} catch (Exception e) {
-			System.err.println("QuestionCategory Delete Issue");
+			log.error(e.getMessage());
 		}
-		return new ResponseDTO<QuestionCategoryDTO>(code, description);
+		return new ResponseDTO<>(code, description);
 	}
 
 	/**
@@ -175,9 +172,9 @@ public class QuestionCategoryServiceImpl implements QuestionCategoryService {
 			}
 
 		} catch (Exception e) {
-			System.err.println("QuestionCategory Find Issue");
+			log.error(e.getMessage());
 		}
-		return new ResponseDTO<QuestionCategoryDTO>(code, description, dto);
+		return new ResponseDTO<>(code, description, dto);
 	}
 
 	/**
@@ -190,26 +187,26 @@ public class QuestionCategoryServiceImpl implements QuestionCategoryService {
 		HashMap<String, Object> map = new HashMap<>();
 		String code = ResponseCodeEnum.FAILED.getCode();
 		try {
-			List<DropDownDTO> status = statusCategoryDAO.findStatusCategoryByCode(StatusCategoryEnum.DEFAULT.getCode())
+			List<?> status = statusCategoryDAO.findStatusCategoryByCode(StatusCategoryEnum.DEFAULT.getCode())
 					.getStatusEntities().stream()
-					.sorted(Comparator.comparing(StatusEntity::getDescription)).map(s -> new DropDownDTO(s.getCode(), s.getDescription()))
+					.sorted(Comparator.comparing(StatusEntity::getDescription)).map(s -> new DropDownDTO<>(s.getCode(), s.getDescription()))
 					.collect(Collectors.toList());
 
 			map.put("status", status);
 
 			code = ResponseCodeEnum.SUCCESS.getCode();
 		} catch (Exception e) {
-			System.err.println("QuestionCategory Ref Data Issue");
+			log.error(e.getMessage());
 		}
-		return new ResponseDTO<HashMap<String, Object>>(code, map);
+		return new ResponseDTO<>(code, map);
 	}
 
 	@Override
 	@Transactional
 	public DataTableResponseDTO getQuestionCategoriesForDataTable(DataTableRequestDTO dataTableRequestDTO) {
-		List<QuestionCategoryDTO> list = new ArrayList<>();
+		List<QuestionCategoryDTO> list;
 		DataTableResponseDTO responseDTO = new DataTableResponseDTO();
-		Long numOfRecord = Long.valueOf(0);
+		Long numOfRecord;
 		try {
 			list = questionCategoryDAO.<List<QuestionCategoryEntity>>getDataForGrid(dataTableRequestDTO, CommonConstant.GRID_SEARCH_LIST)
 					.stream().map(entity -> {
@@ -232,6 +229,7 @@ public class QuestionCategoryServiceImpl implements QuestionCategoryService {
 			responseDTO.setDraw(dataTableRequestDTO.getDraw());
 
 		} catch (Exception e) {
+			log.error(e.getMessage());
 		}
 
 		return responseDTO;

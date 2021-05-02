@@ -12,18 +12,19 @@ import com.leaf.eexamen.service.PasswordResetRequestService;
 import com.leaf.eexamen.utility.CommonConstant;
 import com.leaf.eexamen.utility.CommonMethod;
 import com.leaf.eexamen.utility.MailSenderService;
+import lombok.AllArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
+@Log4j2
+@AllArgsConstructor(onConstructor = @__(@Autowired))
 public class PasswordResetRequestServiceImpl implements PasswordResetRequestService {
 
     private SysUserDAO sysUserDAO;
@@ -37,27 +38,17 @@ public class PasswordResetRequestServiceImpl implements PasswordResetRequestServ
 
     BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    @Autowired
-    public PasswordResetRequestServiceImpl(SysUserDAO sysUserDAO, StatusDAO statusDAO, MasterDataDAO masterDataDAO, PasswordResetRequestDAO passwordResetRequestDAO, MailSenderService mailSenderService,CommonMethod commonMethod, BCryptPasswordEncoder bCryptPasswordEncoder,EmailBodyDAO emailBodyDAO) {
-        this.sysUserDAO = sysUserDAO;
-        this.statusDAO = statusDAO;
-        this.masterDataDAO = masterDataDAO;
-        this.passwordResetRequestDAO = passwordResetRequestDAO;
-        this.mailSenderService = mailSenderService;
-        this.commonMethod = commonMethod;
-        this.emailBodyDAO = emailBodyDAO;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-    }
+
 
     @Override
     @Transactional
     public ResponseDTO<?> createPasswordResetRequest(SysUserDTO sysUserDTO) {
         String code = ResponseCodeEnum.FAILED.getCode();
-        String description = "Reset password is  Faield";
+        String description = "Reset password is  Failed";
         SysUserEntity sysUserEntity;
         try {
             sysUserEntity = sysUserDAO.getSysUserEntityByUsername(sysUserDTO.getUsername());
-            if (sysUserEntity == null || DeleteStatusEnum.DELETE.getCode().equalsIgnoreCase(sysUserEntity.getStatusEntity().getCode()))
+            if ( Objects.isNull(sysUserEntity) || DeleteStatusEnum.DELETE.getCode().equalsIgnoreCase(sysUserEntity.getStatusEntity().getCode()))
                 description = "User is Not Found";
 
             if (!Optional.ofNullable(passwordResetRequestDAO.findAllPasswordResetRequestsBySysUserAndStatus(sysUserEntity.getUsername(), PasswordResetRequestStatusEnum.REQUEST.getCode())).orElse(Collections.EMPTY_LIST).isEmpty())
@@ -84,7 +75,7 @@ public class PasswordResetRequestServiceImpl implements PasswordResetRequestServ
             }
 
         } catch (Exception e) {
-            System.err.println("Reset password Issue");
+           log.error(e.getMessage());
         }
         return new ResponseDTO<>(code, description);
     }
@@ -146,7 +137,7 @@ public class PasswordResetRequestServiceImpl implements PasswordResetRequestServ
 
 
         } catch (Exception e) {
-            System.err.println("Reset password Issue");
+            log.error(e.getMessage());
         }
         return new ResponseDTO<>(code, description);
     }
@@ -190,7 +181,7 @@ public class PasswordResetRequestServiceImpl implements PasswordResetRequestServ
             responseDTO.setDraw(dataTableRequestDTO.getDraw());
 
         } catch (Exception e) {
-            System.err.println("Password Reset Request Data Table Issue");
+            log.error(e.getMessage());
         }
 
         return responseDTO;
