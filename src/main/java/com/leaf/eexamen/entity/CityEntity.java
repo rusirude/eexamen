@@ -1,25 +1,26 @@
 package com.leaf.eexamen.entity;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 
-@EqualsAndHashCode(callSuper = true)
-@Data
+
+@Getter
+@Setter
 @Entity
 @Table(name = "city")
-public class CityEntity extends CommonEntity{
+public class CityEntity extends CommonEntity {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-	@Column(name = "code", length = 10, nullable = false)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @Column(name = "code", length = 10, nullable = false)
     private String code;
-	@Column(name = "description", length = 50, nullable = false)
-	private String description;
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name =  "status" , nullable = false)
+    @Column(name = "description", length = 50, nullable = false)
+    private String description;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "status", nullable = false)
     private StatusEntity statusEntity;
 
 }

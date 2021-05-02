@@ -1,17 +1,17 @@
 package com.leaf.eexamen.entity;
 
 
-
-import lombok.Data;
-
-import java.util.Date;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import java.util.Date;
 
-@Data
+@Getter
+@Setter
 @MappedSuperclass
 public class CommonEntity {
 

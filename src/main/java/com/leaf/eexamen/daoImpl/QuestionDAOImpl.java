@@ -8,6 +8,8 @@ import com.leaf.eexamen.entity.StatusEntity_;
 import com.leaf.eexamen.entity.SysRoleEntity_;
 import com.leaf.eexamen.enums.DeleteStatusEnum;
 import com.leaf.eexamen.utility.CommonConstant;
+import lombok.AllArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -19,9 +21,11 @@ import java.util.List;
 
 
 @Repository
+@Log4j2
+@AllArgsConstructor(onConstructor = @__(@Autowired))
 public class QuestionDAOImpl implements QuestionDAO {
 
-	@Autowired
+
 	private EntityManager entityManager;
 
 	/**
@@ -60,7 +64,7 @@ public class QuestionDAOImpl implements QuestionDAO {
         try {
             QuestionEntity = entityManager.createQuery(criteriaQuery).getSingleResult();
         } catch (Exception e) {
-            System.err.println(e);
+			log.info(e.getMessage());
         }
 
         return QuestionEntity;
@@ -99,7 +103,7 @@ public class QuestionDAOImpl implements QuestionDAO {
         try {
         	questionEntities = entityManager.createQuery(criteriaQuery).getResultList();
         } catch (Exception e) {
-            System.err.println(e);
+			log.info(e.getMessage());
         }
 
         return questionEntities;
@@ -124,7 +128,7 @@ public class QuestionDAOImpl implements QuestionDAO {
         try {
 			countryEntities = entityManager.createQuery(criteriaQuery).getResultList();
         } catch (Exception e) {
-            System.err.println(e);
+			log.info(e.getMessage());
         }
 
         return countryEntities;

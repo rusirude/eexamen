@@ -1,16 +1,17 @@
 package com.leaf.eexamen.entity;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Date;
 
-@EqualsAndHashCode(callSuper = true)
-@Data
+
+@Getter
+@Setter
 @Entity
-@Table(name="student_examination")
-public class StudentExaminationEntity extends CommonEntity{
+@Table(name = "student_examination")
+public class StudentExaminationEntity extends CommonEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,7 +23,7 @@ public class StudentExaminationEntity extends CommonEntity{
     @JoinColumn(name = "examination", nullable = false)
     private ExaminationEntity examinationEntity;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name =  "status" , nullable = false)
+    @JoinColumn(name = "status", nullable = false)
     private StatusEntity statusEntity;
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "start_on")

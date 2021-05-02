@@ -1,29 +1,27 @@
 package com.leaf.eexamen.daoImpl;
 
-import java.util.List;
+import com.leaf.eexamen.dao.SysUserAuthorityDAO;
+import com.leaf.eexamen.entity.*;
+import com.leaf.eexamen.enums.DefaultStatusEnum;
+import lombok.AllArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaDelete;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
-
-import com.leaf.eexamen.dao.SysUserAuthorityDAO;
-import com.leaf.eexamen.entity.AuthorityEntity_;
-import com.leaf.eexamen.entity.StatusEntity_;
-import com.leaf.eexamen.entity.SysUserAuthorityEntity;
-import com.leaf.eexamen.entity.SysUserAuthorityEntity_;
-import com.leaf.eexamen.entity.SysUserEntity_;
-import com.leaf.eexamen.enums.DefaultStatusEnum;
+import java.util.List;
 
 @Repository
+@Log4j2
+@AllArgsConstructor(onConstructor = @__(@Autowired))
 public class SysUserAuthorityDAOImpl implements SysUserAuthorityDAO {
 	
 	
-	@Autowired
+
 	private EntityManager entityManager;
 	
 	/**

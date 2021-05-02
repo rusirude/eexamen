@@ -1,12 +1,13 @@
 package com.leaf.eexamen.entity;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 
-@EqualsAndHashCode(callSuper = true)
-@Data
+
+@Getter
+@Setter
 @Entity
 @Table(name = "student_examination_question_answer")
 public class StudentExaminationQuestionAnswerEntity extends CommonEntity {
@@ -17,17 +18,17 @@ public class StudentExaminationQuestionAnswerEntity extends CommonEntity {
     @Column(name = "seq")
     private Integer seq;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name =  "student_examination" , nullable = false)
+    @JoinColumn(name = "student_examination", nullable = false)
     private StudentExaminationEntity studentExaminationEntity;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name =  "question" , nullable = false)
+    @JoinColumn(name = "question", nullable = false)
     private QuestionEntity questionEntity;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name =  "question_answer" , nullable = false)
+    @JoinColumn(name = "question_answer", nullable = false)
     private QuestionAnswerEntity questionAnswerEntity;
     @Column(name = "correct")
     private boolean correct;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name =  "correct_question_answer" , nullable = false)
+    @JoinColumn(name = "correct_question_answer", nullable = false)
     private QuestionAnswerEntity correctQuestionAnswerEntity;
 }

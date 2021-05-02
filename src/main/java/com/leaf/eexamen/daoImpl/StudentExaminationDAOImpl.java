@@ -4,6 +4,8 @@ import com.leaf.eexamen.dao.StudentExaminationDAO;
 import com.leaf.eexamen.dto.common.DataTableRequestDTO;
 import com.leaf.eexamen.entity.*;
 import com.leaf.eexamen.utility.CommonConstant;
+import lombok.AllArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -15,9 +17,10 @@ import java.util.Date;
 import java.util.List;
 
 @Repository
+@Log4j2
+@AllArgsConstructor(onConstructor = @__(@Autowired))
 public class StudentExaminationDAOImpl implements StudentExaminationDAO {
 
-    @Autowired
     private EntityManager entityManager;
 
     /**

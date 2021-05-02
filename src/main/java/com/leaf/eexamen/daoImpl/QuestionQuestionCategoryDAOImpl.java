@@ -3,6 +3,8 @@ package com.leaf.eexamen.daoImpl;
 import com.leaf.eexamen.dao.QuestionQuestionCategoryDAO;
 import com.leaf.eexamen.entity.*;
 import com.leaf.eexamen.enums.DefaultStatusEnum;
+import lombok.AllArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -14,9 +16,11 @@ import javax.persistence.criteria.Root;
 import java.util.List;
 
 @Repository
+@Log4j2
+@AllArgsConstructor(onConstructor = @__(@Autowired))
 public class QuestionQuestionCategoryDAOImpl implements QuestionQuestionCategoryDAO {
 
-	@Autowired
+
 	private EntityManager entityManager;
 	
 

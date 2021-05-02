@@ -12,6 +12,8 @@ import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import lombok.AllArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -26,9 +28,10 @@ import com.leaf.eexamen.enums.DeleteStatusEnum;
 import com.leaf.eexamen.utility.CommonConstant;
 
 @Repository
+@Log4j2
+@AllArgsConstructor(onConstructor = @__(@Autowired))
 public class AuthorityDAOImpl implements AuthorityDAO{
-	
-	@Autowired
+
 	private EntityManager entityManager;
 	
 	/**
@@ -67,7 +70,7 @@ public class AuthorityDAOImpl implements AuthorityDAO{
         try {
             authorityEntity = entityManager.createQuery(criteriaQuery).getSingleResult();
         } catch (Exception e) {
-            System.err.println(e);
+        	log.info(e.getMessage());
         }
 
         return authorityEntity;
@@ -91,7 +94,7 @@ public class AuthorityDAOImpl implements AuthorityDAO{
         try {
         	authoritiesEntities = entityManager.createQuery(criteriaQuery).getResultList();
         } catch (Exception e) {
-            System.err.println(e);
+			log.info(e.getMessage());
         }
         
         return authoritiesEntities;

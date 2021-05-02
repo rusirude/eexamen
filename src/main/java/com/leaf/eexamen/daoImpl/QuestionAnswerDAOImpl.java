@@ -2,6 +2,8 @@ package com.leaf.eexamen.daoImpl;
 
 import com.leaf.eexamen.dao.QuestionAnswerDAO;
 import com.leaf.eexamen.entity.*;
+import lombok.AllArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -14,9 +16,11 @@ import java.util.List;
 
 
 @Repository
+@Log4j2
+@AllArgsConstructor(onConstructor = @__(@Autowired))
 public class QuestionAnswerDAOImpl implements QuestionAnswerDAO {
 	
-	@Autowired
+
 	private EntityManager entityManager;
 
 	/**
@@ -71,7 +75,7 @@ public class QuestionAnswerDAOImpl implements QuestionAnswerDAO {
 		try {
 			qestionAnswerEntities = entityManager.createQuery(criteriaQuery).getResultList();
 		} catch (Exception e) {
-			System.err.println(e);
+			log.info(e.getMessage());
 		}
 
 		return qestionAnswerEntities;
@@ -97,7 +101,7 @@ public class QuestionAnswerDAOImpl implements QuestionAnswerDAO {
 		try {
 			qestionAnswerEntities = entityManager.createQuery(criteriaQuery).getResultList();
 		} catch (Exception e) {
-			System.err.println(e);
+			log.info(e.getMessage());
 		}
 
 		return qestionAnswerEntities;
@@ -122,7 +126,7 @@ public class QuestionAnswerDAOImpl implements QuestionAnswerDAO {
 		try {
 			qestionAnswerEntity = entityManager.createQuery(criteriaQuery).getSingleResult();
 		} catch (Exception e) {
-			System.err.println(e);
+			log.info(e.getMessage());
 		}
 		return qestionAnswerEntity;
 	}
