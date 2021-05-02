@@ -1,23 +1,23 @@
 package com.leaf.eexamen.entity;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 
-@EqualsAndHashCode(callSuper = true)
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "password_reset_request")
-public class PasswordResetRequestEntity extends CommonEntity{
-	
+public class PasswordResetRequestEntity extends CommonEntity {
+
     @Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name =  "sys_user" , nullable = false)
-	private SysUserEntity sysUserEntity;
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name =  "status" , nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "sys_user", nullable = false)
+    private SysUserEntity sysUserEntity;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "status", nullable = false)
     private StatusEntity statusEntity;
 }

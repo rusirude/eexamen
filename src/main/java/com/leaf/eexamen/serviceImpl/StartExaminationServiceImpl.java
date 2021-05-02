@@ -16,6 +16,8 @@ import com.leaf.eexamen.utility.CommonConstant;
 import com.leaf.eexamen.utility.CommonMethod;
 import com.leaf.eexamen.utility.MailSenderService;
 import com.leaf.eexamen.utility.ReportUtil;
+import lombok.AllArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +30,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @Service
+@Log4j2
+@AllArgsConstructor(onConstructor = @__(@Autowired))
 public class StartExaminationServiceImpl implements StartExaminationService {
 
     private StudentExaminationDAO studentExaminationDAO;
@@ -42,23 +46,6 @@ public class StartExaminationServiceImpl implements StartExaminationService {
     private MailSenderService mailSenderService;
     private EmailBodyDAO emailBodyDAO;
     private ReportUtil reportUtil;
-
-
-    @Autowired
-    public StartExaminationServiceImpl(StudentExaminationDAO studentExaminationDAO, StatusDAO statusDAO, QuestionDAO questionDAO, QuestionAnswerDAO questionAnswerDAO, StudentExaminationQuestionAnswerDAO studentExaminationQuestionAnswerDAO, StudentDAO studentDAO, SysUserDAO sysUserDAO, ExaminationDAO examinationDAO, CommonMethod commonMethod, MailSenderService mailSenderService, EmailBodyDAO emailBodyDAO, ReportUtil reportUtil) {
-        this.studentExaminationDAO = studentExaminationDAO;
-        this.statusDAO = statusDAO;
-        this.questionDAO = questionDAO;
-        this.questionAnswerDAO = questionAnswerDAO;
-        this.studentExaminationQuestionAnswerDAO = studentExaminationQuestionAnswerDAO;
-        this.studentDAO = studentDAO;
-        this.sysUserDAO = sysUserDAO;
-        this.examinationDAO = examinationDAO;
-        this.commonMethod = commonMethod;
-        this.mailSenderService = mailSenderService;
-        this.emailBodyDAO = emailBodyDAO;
-        this.reportUtil = reportUtil;
-    }
 
 
     @Override
@@ -91,7 +78,7 @@ public class StartExaminationServiceImpl implements StartExaminationService {
             responseDTO.setDraw(dataTableRequestDTO.getDraw());
 
         } catch (Exception e) {
-            System.err.println(e);
+            log.error(e.getMessage());
         }
 
         return responseDTO;
@@ -163,7 +150,7 @@ public class StartExaminationServiceImpl implements StartExaminationService {
             }
 
         } catch (Exception e) {
-            System.err.println(e);
+            log.error(e.getMessage());
         }
 
         return new ResponseDTO<>(code, seq);
@@ -215,7 +202,7 @@ public class StartExaminationServiceImpl implements StartExaminationService {
                 examQuestionDTO.setDone(studentQuestionAnswerEntity.getStudentExaminationEntity().getExaminationEntity().getNoQuestion() - notAnswer);
                 examQuestionDTO.setStartTime(commonMethod.dateTimeToString(studentQuestionAnswerEntity.getStudentExaminationEntity().getStartOn()));
                 examQuestionDTO.setEndTime(commonMethod.dateTimeToString(studentQuestionAnswerEntity.getStudentExaminationEntity().getEndOn()));
-                examQuestionDTO.setCurrentTime(commonMethod.dateTimeToString(systemDate,CommonConstant.SYSTEM_DATE_TIME_3_FORMAT));
+                examQuestionDTO.setCurrentTime(commonMethod.dateTimeToString(systemDate, CommonConstant.SYSTEM_DATE_TIME_3_FORMAT));
                 code = ResponseCodeEnum.SUCCESS.getCode();
             } else {
                 studentExaminationEntity.setStatusEntity(closedExamStatusEntity);
@@ -230,7 +217,7 @@ public class StartExaminationServiceImpl implements StartExaminationService {
 
 
         } catch (Exception e) {
-            System.err.println("Getting Question for examination");
+            log.error(e.getMessage());
         }
         return new ResponseDTO<>(code, examQuestionDTO);
     }
@@ -249,7 +236,7 @@ public class StartExaminationServiceImpl implements StartExaminationService {
 
             code = ResponseCodeEnum.SUCCESS.getCode();
         } catch (Exception e) {
-            System.err.println("Getting Question for examination");
+            log.error(e.getMessage());
         }
         return new ResponseDTO<>(code);
     }
@@ -260,16 +247,16 @@ public class StartExaminationServiceImpl implements StartExaminationService {
         try {
             finalStateChangeStudentExamination(studentExam);
         } catch (Exception e) {
-            System.err.println("Getting Question for examination");
+            log.error(e.getMessage());
         }
     }
 
 
     @Override
     @Transactional
-    public ResponseDTO<List<RemainingQuestion>> getRemainingQuestions(Long studentExam){
+    public ResponseDTO<List<RemainingQuestion>> getRemainingQuestions(Long studentExam) {
         String code = ResponseCodeEnum.FAILED.getCode();
-        List<RemainingQuestion> notAnswered=null;
+        List<RemainingQuestion> notAnswered = null;
         try {
             notAnswered = studentExaminationQuestionAnswerDAO.findStudentExaminationQuestionAnswerEntityByStudentExaminationAndAnswerIsNull(studentExam)
                     .stream()
@@ -277,14 +264,14 @@ public class StartExaminationServiceImpl implements StartExaminationService {
                         RemainingQuestion remainingQuestion = new RemainingQuestion();
                         remainingQuestion.setSeq(entity.getSeq());
                         remainingQuestion.setQuestion(entity.getQuestionEntity().getDescription());
-                        return  remainingQuestion;
+                        return remainingQuestion;
                     }).collect(Collectors.toList());
             code = ResponseCodeEnum.SUCCESS.getCode();
         } catch (Exception e) {
-            System.err.println("Getting Remaining for examination");
+            log.error(e.getMessage());
         }
 
-        return new ResponseDTO<>(code,notAnswered);
+        return new ResponseDTO<>(code, notAnswered);
     }
 
 
@@ -305,12 +292,11 @@ public class StartExaminationServiceImpl implements StartExaminationService {
                         else
                             finalResultDTO.setWrong(finalResultDTO.getWrong() + 1);
                     });
-            if (finalResultDTO.getTotal() > 0){
+            if (finalResultDTO.getTotal() > 0) {
                 int result = BigDecimal.valueOf(((double) finalResultDTO.getCorrect() / (double) finalResultDTO.getTotal()) * 100)
                         .setScale(0, RoundingMode.HALF_UP).toBigInteger().intValue();
                 finalResultDTO.setFinalMark(result);
-            }
-            else
+            } else
                 finalResultDTO.setFinalMark(0);
 
             finalResultDTO.setName(studentExaminationEntity.getSysUserEntity().getTitleEntity().getDescription() + studentExaminationEntity.getSysUserEntity().getName());
@@ -321,7 +307,7 @@ public class StartExaminationServiceImpl implements StartExaminationService {
             finalResultDTO.setPassed(Optional.ofNullable(studentExaminationEntity.getPass()).orElse(false));
             code = ResponseCodeEnum.SUCCESS.getCode();
         } catch (Exception e) {
-            System.err.println("Getting Question for examination");
+            log.error(e.getMessage());
         }
         return new ResponseDTO<>(code, finalResultDTO);
     }
@@ -333,7 +319,7 @@ public class StartExaminationServiceImpl implements StartExaminationService {
         try {
             reportDTO = getAnswerReport(studentExam);
         } catch (Exception e) {
-            System.err.println("Getting Question for examination");
+            log.error(e.getMessage());
         }
         return reportDTO;
     }
@@ -358,7 +344,7 @@ public class StartExaminationServiceImpl implements StartExaminationService {
                         dto.setStudentName(entity.getSysUserEntity().getTitleEntity().getDescription() + " " + entity.getSysUserEntity().getName());
                         dto.setCompany(Optional.ofNullable(studentEntity.getCompany()).orElse(""));
                         dto.setPass("");
-                        if(!ExamStatusEnum.PENDING.getCode().equals(entity.getStatusEntity().getCode())){
+                        if (!ExamStatusEnum.PENDING.getCode().equals(entity.getStatusEntity().getCode())) {
                             dto.setPass(Optional.ofNullable(entity.getPass()).orElse(false) ? "Passed" : "Not Passed");
                         }
                         dto.setDateOn(commonMethod.dateTimeToString(entity.getExaminationEntity().getDateOn()));
@@ -376,50 +362,48 @@ public class StartExaminationServiceImpl implements StartExaminationService {
             reportDTO.setDownloadName("StudentExamination");
             reportDTO.setDtoList(studentExam);
         } catch (Exception e) {
-            System.err.println("Getting Question for examination");
+            log.error(e.getMessage());
         }
         return reportDTO;
     }
 
     @Override
     @Transactional
-    public ResponseDTO<?> generateAnswerDetailReportDetailsAndSendMail(long studentExam){
+    public ResponseDTO<?> generateAnswerDetailReportDetailsAndSendMail(long studentExam) {
         ReportDTO reportDTO = null;
         String code = ResponseCodeEnum.FAILED.getCode();
         String message = "Mail is not Sent";
         try {
             EmailBodyEntity emailBodyEntity = emailBodyDAO.findEmailBodyEntityByCode(EmailEnum.EFR.getCode());
-            if(!Optional.ofNullable(emailBodyEntity.getEnable()).orElse(false)){
+            if (!Optional.ofNullable(emailBodyEntity.getEnable()).orElse(false)) {
                 message = "Please Enable Exam Result Email";
-                return new ResponseDTO<>(code,message);
+                return new ResponseDTO<>(code, message);
             }
             reportDTO = getAnswerReport(studentExam);
             StudentExaminationEntity studentExaminationEntity = studentExaminationDAO.findStudentExaminationEntity(studentExam);
             DataSource attachment = reportUtil.createReportAsByteStream(reportDTO);
             String subject = emailBodyEntity.getSubject()
-                    .replace("@ExamName",studentExaminationEntity.getExaminationEntity().getDescription())
-                    .replace("@StudentName",studentExaminationEntity.getSysUserEntity().getTitleEntity().getDescription()+""+studentExaminationEntity.getSysUserEntity().getName());
+                    .replace("@ExamName", studentExaminationEntity.getExaminationEntity().getDescription())
+                    .replace("@StudentName", studentExaminationEntity.getSysUserEntity().getTitleEntity().getDescription() + "" + studentExaminationEntity.getSysUserEntity().getName());
             String content = emailBodyEntity.getContent()
-                    .replace("@ExamName",studentExaminationEntity.getExaminationEntity().getDescription())
-                    .replace("@StudentName",studentExaminationEntity.getSysUserEntity().getTitleEntity().getDescription()+""+studentExaminationEntity.getSysUserEntity().getName());
-            mailSenderService.sendEmailWithPlainTextAndAttachment(studentExaminationEntity.getSysUserEntity().getUsername(),subject,content,attachment,reportDTO.getDownloadName()+".pdf");
+                    .replace("@ExamName", studentExaminationEntity.getExaminationEntity().getDescription())
+                    .replace("@StudentName", studentExaminationEntity.getSysUserEntity().getTitleEntity().getDescription() + "" + studentExaminationEntity.getSysUserEntity().getName());
+            mailSenderService.sendEmailWithPlainTextAndAttachment(studentExaminationEntity.getSysUserEntity().getUsername(), subject, content, attachment, reportDTO.getDownloadName() + ".pdf");
             code = ResponseCodeEnum.SUCCESS.getCode();
             message = "Mail is Sent";
         } catch (Exception e) {
-            System.err.println(e.getMessage());
+            log.error(e.getMessage());
         }
-        return new ResponseDTO<>(code,message);
+        return new ResponseDTO<>(code, message);
     }
-
-
 
 
     @Override
     @Transactional
     public DataTableResponseDTO getStudentExaminationForDataTableForAdd(DataTableRequestDTO dataTableRequestDTO) {
-        List<StudentExaminationDTO> list = new ArrayList<>();
+        List<StudentExaminationDTO> list;
         DataTableResponseDTO responseDTO = new DataTableResponseDTO();
-        Long numOfRecord = Long.valueOf(0);
+        Long numOfRecord;
         try {
             list = studentExaminationDAO.<List<StudentExaminationEntity>>getDataForGridForStudent(dataTableRequestDTO, CommonConstant.GRID_SEARCH_LIST)
                     .stream().map(entity -> {
@@ -445,7 +429,7 @@ public class StartExaminationServiceImpl implements StartExaminationService {
             responseDTO.setDraw(dataTableRequestDTO.getDraw());
 
         } catch (Exception e) {
-            System.err.println(e);
+            log.error(e.getMessage());
         }
 
         return responseDTO;
@@ -460,14 +444,14 @@ public class StartExaminationServiceImpl implements StartExaminationService {
             Date sysDate = commonMethod.getSystemDate();
             List<?> examination = examinationDAO.findAllExaminationEntities(DefaultStatusEnum.ACTIVE.getCode())
                     .stream()
-                    .filter(examinationEntity -> {
-                        return examinationEntity.getExpireOn().compareTo(sysDate) > 0;
-                    })
-                    .map(t -> new DropDownDTO(t.getCode(), t.getDescription()))
+                    .filter(examinationEntity ->
+                            examinationEntity.getExpireOn().compareTo(sysDate) > 0
+                    )
+                    .map(t -> new DropDownDTO<>(t.getCode(), t.getDescription()))
                     .collect(Collectors.toList());
 
             List<?> student = studentDAO.findStudents(DefaultStatusEnum.ACTIVE.getCode())
-                    .stream().map(t -> new DropDownDTO(t.getUsername(), t.getTitleEntity().getDescription() + " " + t.getName() + "-" + t.getUsername()))
+                    .stream().map(t -> new DropDownDTO<>(t.getUsername(), t.getTitleEntity().getDescription() + " " + t.getName() + "-" + t.getUsername()))
                     .collect(Collectors.toList());
 
             map.put("student", student);
@@ -475,7 +459,7 @@ public class StartExaminationServiceImpl implements StartExaminationService {
 
             code = ResponseCodeEnum.SUCCESS.getCode();
         } catch (Exception e) {
-            System.err.println(e.getMessage());
+            log.error(e.getMessage());
         }
         return new ResponseDTO<>(code, map);
     }
@@ -505,7 +489,7 @@ public class StartExaminationServiceImpl implements StartExaminationService {
             description = "Examination  Save Success";
 
         } catch (Exception e) {
-            System.err.println("Save Student User Issue");
+            log.error(e.getMessage());
         }
         return new ResponseDTO<>(code, description);
     }
@@ -514,7 +498,7 @@ public class StartExaminationServiceImpl implements StartExaminationService {
     @Transactional
     public ResponseDTO<?> deleteStudentExamination(StudentExaminationDTO studentExaminationDTO) {
         String code = ResponseCodeEnum.FAILED.getCode();
-        String description = "Examination is Removed from Student is Faield";
+        String description = "Examination is Removed from Student is Failed";
         try {
             StudentExaminationEntity studentExaminationEntity = studentExaminationDAO.findStudentExaminationEntity(studentExaminationDTO.getId());
             if (ExamStatusEnum.PENDING.getCode().equals(studentExaminationEntity.getStatusEntity().getCode())) {
@@ -528,7 +512,7 @@ public class StartExaminationServiceImpl implements StartExaminationService {
 
 
         } catch (Exception e) {
-            System.err.println("Getting Question for examination");
+            log.error(e.getMessage());
         }
         return new ResponseDTO<>(code, description);
     }
@@ -537,7 +521,7 @@ public class StartExaminationServiceImpl implements StartExaminationService {
     @Transactional
     public ResponseDTO<?> tryToCloseStudentExamination(StudentExaminationDTO studentExaminationDTO) {
         String code = ResponseCodeEnum.FAILED.getCode();
-        String description = "Examination is stopped  Faield";
+        String description = "Examination is stopped  Failed";
         try {
             Date systemDate = commonMethod.getSystemDate();
             StudentExaminationEntity studentExaminationEntity = studentExaminationDAO.findStudentExaminationEntity(studentExaminationDTO.getId());
@@ -557,7 +541,7 @@ public class StartExaminationServiceImpl implements StartExaminationService {
 
 
         } catch (Exception e) {
-            System.err.println("Getting Question for examination");
+            log.error(e.getMessage());
         }
         return new ResponseDTO<>(code, description);
     }
@@ -575,7 +559,7 @@ public class StartExaminationServiceImpl implements StartExaminationService {
                     else
                         studentExaminationQuestionAnswerEntity.setCorrect(false);
 
-                    studentExaminationQuestionAnswerEntity.setCorrectQuestionAnswerEntity(Optional.ofNullable(questionAnswerDAO.findCorrectQuestionAnswerEntity(studentExaminationQuestionAnswerEntity.getQuestionEntity().getId(),DefaultStatusEnum.ACTIVE.getCode())).orElse(null));
+                    studentExaminationQuestionAnswerEntity.setCorrectQuestionAnswerEntity(Optional.ofNullable(questionAnswerDAO.findCorrectQuestionAnswerEntity(studentExaminationQuestionAnswerEntity.getQuestionEntity().getId(), DefaultStatusEnum.ACTIVE.getCode())).orElse(null));
                     commonMethod.getPopulateEntityWhenUpdate(studentExaminationQuestionAnswerEntity);
                     studentExaminationQuestionAnswerDAO.updateStudentExaminationQuestionAnswerEntity(studentExaminationQuestionAnswerEntity);
                 });
@@ -597,7 +581,7 @@ public class StartExaminationServiceImpl implements StartExaminationService {
         studentExaminationDAO.updateStudentExaminationEntity(studentExaminationEntity);
     }
 
-    private ReportDTO getAnswerReport(long studentExam){
+    private ReportDTO getAnswerReport(long studentExam) {
         ReportDTO reportDTO = new ReportDTO();
         Map<String, Object> parameters = new HashMap<>();
         reportDTO.setReportPath(CommonConstant.REPORT_PATH);
@@ -622,9 +606,9 @@ public class StartExaminationServiceImpl implements StartExaminationService {
                 .map(studentExaminationQuestionAnswerEntity -> {
                     QuestionResultDTO questionResultDTO = new QuestionResultDTO();
                     questionResultDTO.setQuestion(studentExaminationQuestionAnswerEntity.getQuestionEntity().getDescription());
-                    questionResultDTO.setAnswer(Objects.isNull(studentExaminationQuestionAnswerEntity.getQuestionAnswerEntity())?"Niet Beantwoord":studentExaminationQuestionAnswerEntity.getQuestionAnswerEntity().getDescription());
+                    questionResultDTO.setAnswer(Objects.isNull(studentExaminationQuestionAnswerEntity.getQuestionAnswerEntity()) ? "Niet Beantwoord" : studentExaminationQuestionAnswerEntity.getQuestionAnswerEntity().getDescription());
                     questionResultDTO.setResult(Objects.isNull(studentExaminationQuestionAnswerEntity.getQuestionAnswerEntity()) ? "Niet Beantwoord" : (studentExaminationQuestionAnswerEntity.isCorrect() ? "JUIST" : "FOUT"));
-                    questionResultDTO.setCorrectAnswer(!studentExaminationQuestionAnswerEntity.isCorrect()?studentExaminationQuestionAnswerEntity.getCorrectQuestionAnswerEntity().getDescription():"---");
+                    questionResultDTO.setCorrectAnswer(!studentExaminationQuestionAnswerEntity.isCorrect() ? studentExaminationQuestionAnswerEntity.getCorrectQuestionAnswerEntity().getDescription() : "---");
                     questionResultDTO.setCorrect(studentExaminationQuestionAnswerEntity.isCorrect());
                     return questionResultDTO;
                 }).collect(Collectors.toList());

@@ -8,6 +8,8 @@ import com.leaf.eexamen.entity.StatusEntity_;
 import com.leaf.eexamen.entity.SysRoleEntity_;
 import com.leaf.eexamen.enums.DeleteStatusEnum;
 import com.leaf.eexamen.utility.CommonConstant;
+import lombok.AllArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -17,12 +19,14 @@ import javax.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.List;
 
-;
+
 
 @Repository
+@Log4j2
+@AllArgsConstructor(onConstructor = @__(@Autowired))
 public class ExaminationDAOImpl implements ExaminationDAO {
 	
-	@Autowired
+
 	private EntityManager entityManager;
 
 	/**
@@ -61,7 +65,7 @@ public class ExaminationDAOImpl implements ExaminationDAO {
         try {
             ExaminationEntity = entityManager.createQuery(criteriaQuery).getSingleResult();
         } catch (Exception e) {
-            System.err.println(e);
+			log.info(e.getMessage());
         }
 
         return ExaminationEntity;
@@ -101,7 +105,7 @@ public class ExaminationDAOImpl implements ExaminationDAO {
         try {
         	examinationEntities = entityManager.createQuery(criteriaQuery).getResultList();
         } catch (Exception e) {
-            System.err.println(e);
+			log.info(e.getMessage());
         }
         
         return examinationEntities;
@@ -126,7 +130,7 @@ public class ExaminationDAOImpl implements ExaminationDAO {
         try {
 			examinationEntities = entityManager.createQuery(criteriaQuery).getResultList();
         } catch (Exception e) {
-            System.err.println(e);
+			log.info(e.getMessage());
         }
         
         return examinationEntities;

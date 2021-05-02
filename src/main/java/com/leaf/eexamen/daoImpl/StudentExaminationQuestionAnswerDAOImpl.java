@@ -2,6 +2,8 @@ package com.leaf.eexamen.daoImpl;
 
 import com.leaf.eexamen.dao.StudentExaminationQuestionAnswerDAO;
 import com.leaf.eexamen.entity.*;
+import lombok.AllArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -13,9 +15,11 @@ import java.util.Collections;
 import java.util.List;
 
 @Repository
+@Log4j2
+@AllArgsConstructor(onConstructor = @__(@Autowired))
 public class StudentExaminationQuestionAnswerDAOImpl implements StudentExaminationQuestionAnswerDAO {
 
-    @Autowired
+
     private EntityManager entityManager;
 
     /**
@@ -70,6 +74,7 @@ public class StudentExaminationQuestionAnswerDAOImpl implements StudentExaminati
             return entityManager.createQuery(criteriaQuery).setMaxResults(1).getSingleResult();
         }
         catch (Exception e){
+            log.info(e.getMessage());
             return null;
         }
 
@@ -111,6 +116,7 @@ public class StudentExaminationQuestionAnswerDAOImpl implements StudentExaminati
             return entityManager.createQuery(criteriaQuery).getResultList();
         }
         catch (Exception e){
+            log.info(e.getMessage());
             return Collections.emptyList();
         }
 

@@ -8,6 +8,8 @@ import com.leaf.eexamen.entity.StatusEntity_;
 import com.leaf.eexamen.entity.SysRoleEntity_;
 import com.leaf.eexamen.enums.DeleteStatusEnum;
 import com.leaf.eexamen.utility.CommonConstant;
+import lombok.AllArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -17,12 +19,13 @@ import javax.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.List;
 
-;
 
 @Repository
+@Log4j2
+@AllArgsConstructor(onConstructor = @__(@Autowired))
 public class QuestionCategoryDAOImpl implements QuestionCategoryDAO {
 	
-	@Autowired
+
 	private EntityManager entityManager;
 
 	/**
@@ -61,7 +64,7 @@ public class QuestionCategoryDAOImpl implements QuestionCategoryDAO {
         try {
             QuestionCategoryEntity = entityManager.createQuery(criteriaQuery).getSingleResult();
         } catch (Exception e) {
-            System.err.println(e);
+			log.info(e.getMessage());
         }
 
         return QuestionCategoryEntity;
@@ -100,7 +103,7 @@ public class QuestionCategoryDAOImpl implements QuestionCategoryDAO {
         try {
         	countryEntities = entityManager.createQuery(criteriaQuery).getResultList();
         } catch (Exception e) {
-            System.err.println(e);
+			log.info(e.getMessage());
         }
         
         return countryEntities;
@@ -125,7 +128,7 @@ public class QuestionCategoryDAOImpl implements QuestionCategoryDAO {
         try {
 			countryEntities = entityManager.createQuery(criteriaQuery).getResultList();
         } catch (Exception e) {
-            System.err.println(e);
+			log.info(e.getMessage());
         }
         
         return countryEntities;

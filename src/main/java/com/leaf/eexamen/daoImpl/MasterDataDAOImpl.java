@@ -7,6 +7,8 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
+import lombok.AllArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -14,15 +16,13 @@ import com.leaf.eexamen.dao.MasterDataDAO;
 import com.leaf.eexamen.entity.MasterDataEntity;
 
 @Repository
+@Log4j2
+@AllArgsConstructor(onConstructor = @__(@Autowired))
 public class MasterDataDAOImpl implements MasterDataDAO {
 
 	private EntityManager entityManager;	
 	
-	@Autowired
-	public MasterDataDAOImpl(EntityManager entityManager) {		
-		this.entityManager = entityManager;
-	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -70,7 +70,7 @@ public class MasterDataDAOImpl implements MasterDataDAO {
         try {
         	masterDAtaEntities = entityManager.createQuery(criteriaQuery).getResultList();
         } catch (Exception e) {
-            System.err.println(e);
+			log.info(e.getMessage());
         }
         
         return masterDAtaEntities;

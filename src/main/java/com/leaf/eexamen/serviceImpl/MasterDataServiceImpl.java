@@ -11,6 +11,8 @@ import com.leaf.eexamen.enums.ResponseCodeEnum;
 import com.leaf.eexamen.service.MasterDataService;
 import com.leaf.eexamen.utility.CommonConstant;
 import com.leaf.eexamen.utility.CommonMethod;
+import lombok.AllArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,18 +22,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Log4j2
+@AllArgsConstructor(onConstructor = @__(@Autowired))
 public class MasterDataServiceImpl implements MasterDataService {
 
     private MasterDataDAO masterDataDAO;
     private SysRoleDAO sysRoleDAO;
     private CommonMethod commonMethod;
 
-    @Autowired
-    public MasterDataServiceImpl(MasterDataDAO masterDataDAO, SysRoleDAO sysRoleDAO, CommonMethod commonMethod) {
-        this.masterDataDAO = masterDataDAO;
-        this.sysRoleDAO = sysRoleDAO;
-        this.commonMethod = commonMethod;
-    }
 
 
     /**
@@ -44,19 +42,19 @@ public class MasterDataServiceImpl implements MasterDataService {
         HashMap<String, Object> map = new HashMap<>();
         String code = ResponseCodeEnum.FAILED.getCode();
         try {
-            List<DropDownDTO> sysRole = sysRoleDAO.findAllSysRoleEntities(DefaultStatusEnum.ACTIVE.getCode())
+            List<?> sysRole = sysRoleDAO.findAllSysRoleEntities(DefaultStatusEnum.ACTIVE.getCode())
                     .stream()
                     .filter(sysRoleEntity -> !CommonConstant.SYSTEM.equals(sysRoleEntity.getCode()))
-                    .map(c -> new DropDownDTO(c.getCode(), c.getDescription()))
+                    .map(c -> new DropDownDTO<>(c.getCode(), c.getDescription()))
                     .collect(Collectors.toList());
 
             map.put("sysRole", sysRole);
 
             code = ResponseCodeEnum.SUCCESS.getCode();
         } catch (Exception e) {
-            System.err.println("Country Ref Data Issue");
+            log.error(e.getMessage());
         }
-        return new ResponseDTO<HashMap<String, Object>>(code, map);
+        return new ResponseDTO<>(code, map);
     }
 
     /**
@@ -78,9 +76,9 @@ public class MasterDataServiceImpl implements MasterDataService {
             code = ResponseCodeEnum.SUCCESS.getCode();
 
         } catch (Exception e) {
-            System.err.println("Getting all master data issue");
+            log.error(e.getMessage());
         }
-        return new ResponseDTO<List<MasterDataDTO>>(code, masterData);
+        return new ResponseDTO<>(code, masterData);
     }
 
     /**
@@ -93,7 +91,7 @@ public class MasterDataServiceImpl implements MasterDataService {
         String code = ResponseCodeEnum.FAILED.getCode();
         String description = "Master Data Save Faild";
         try {
-            masterDataDTOS.stream().forEach(dto -> {
+            masterDataDTOS.forEach(dto -> {
                 MasterDataEntity entity = masterDataDAO.findMasterDataEntity(dto.getCode());
                 if (entity != null) {
                     entity.setValue(String.valueOf(dto.getValue()));
@@ -114,9 +112,9 @@ public class MasterDataServiceImpl implements MasterDataService {
             description = "Master Data Saved Successfully";
 
         } catch (Exception e) {
-            System.err.println("Save or Update master data issue");
+            log.error(e.getMessage());
         }
-        return new ResponseDTO<MasterDataDTO>(code, description);
+        return new ResponseDTO<>(code, description);
     }
 
 }

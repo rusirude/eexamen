@@ -1,10 +1,12 @@
 package com.leaf.eexamen.entity;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "question_question_category")
 public class QuestionQuestionCategoryEntity {

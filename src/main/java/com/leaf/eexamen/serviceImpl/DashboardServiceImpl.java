@@ -12,6 +12,8 @@ import com.leaf.eexamen.entity.SysUserEntity;
 import com.leaf.eexamen.enums.DefaultStatusEnum;
 import com.leaf.eexamen.service.DashboardService;
 import com.leaf.eexamen.utility.CommonMethod;
+import lombok.AllArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +25,8 @@ import java.util.stream.Collectors;
  */
 
 @Service
+@Log4j2
+@AllArgsConstructor(onConstructor = @__(@Autowired))
 public class DashboardServiceImpl implements DashboardService {
 
     private CommonMethod commonMethod;
@@ -30,14 +34,6 @@ public class DashboardServiceImpl implements DashboardService {
     private SysUserAuthorityDAO sysUserAuthorityDAO;
     private SysUserDAO sysUserDAO;
 
-
-    @Autowired
-    public DashboardServiceImpl(CommonMethod commonMethod, SysRoleAuthorityDAO sysRoleAuthorityDAO, SysUserAuthorityDAO sysUserAuthorityDAO, SysUserDAO sysUserDAO) {
-        this.commonMethod = commonMethod;
-        this.sysRoleAuthorityDAO = sysRoleAuthorityDAO;
-        this.sysUserAuthorityDAO = sysUserAuthorityDAO;
-        this.sysUserDAO = sysUserDAO;
-    }
 
     public MainMenuDTO loadMainMenu() {
 

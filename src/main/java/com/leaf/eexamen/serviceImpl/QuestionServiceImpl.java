@@ -16,6 +16,8 @@ import com.leaf.eexamen.enums.StatusCategoryEnum;
 import com.leaf.eexamen.service.QuestionService;
 import com.leaf.eexamen.utility.CommonConstant;
 import com.leaf.eexamen.utility.CommonMethod;
+import lombok.AllArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +26,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
+@Log4j2
+@AllArgsConstructor(onConstructor = @__(@Autowired))
 public class QuestionServiceImpl implements QuestionService {
 
 	private QuestionDAO questionDAO;
@@ -34,17 +38,6 @@ public class QuestionServiceImpl implements QuestionService {
 	private StatusCategoryDAO statusCategoryDAO;
 	private CommonMethod commonMethod;
 
-	@Autowired
-	public QuestionServiceImpl(QuestionDAO questionDAO, QuestionCategoryDAO questionCategoryDAO, QuestionAnswerDAO questionAnswerDAO, QuestionQuestionCategoryDAO questionQuestionCategoryDAO, StatusDAO statusDAO, StatusCategoryDAO statusCategoryDAO, CommonMethod commonMethod) {
-		this.questionDAO = questionDAO;
-		this.questionCategoryDAO = questionCategoryDAO;
-		this.questionAnswerDAO = questionAnswerDAO;
-		this.questionQuestionCategoryDAO = questionQuestionCategoryDAO;
-		this.statusDAO = statusDAO;
-		this.statusCategoryDAO = statusCategoryDAO;
-		this.commonMethod = commonMethod;
-	}
-
 
 	/**
 	 * {@inheritDoc}
@@ -53,7 +46,7 @@ public class QuestionServiceImpl implements QuestionService {
 	@Transactional
 	public ResponseDTO<QuestionDTO> saveQuestion(QuestionDTO questionDTO) {
 		String code = ResponseCodeEnum.FAILED.getCode();
-		String description = "Question Save Faield";
+		String description = "Question Save Failed";
 
 		QuestionEntity questionEntity;
 		try {
@@ -115,7 +108,7 @@ public class QuestionServiceImpl implements QuestionService {
 			}
 
 		} catch (Exception e) {
-			System.err.println("Question Save Issue");
+			log.error(e.getMessage());
 		}
 		return new ResponseDTO<>(code, description);
 	}
@@ -127,7 +120,7 @@ public class QuestionServiceImpl implements QuestionService {
 	@Transactional
 	public ResponseDTO<QuestionDTO> updateQuestion(QuestionDTO questionDTO) {
 		String code = ResponseCodeEnum.FAILED.getCode();
-		String description = "Question Update Faield";
+		String description = "Question Update Failed";
 		try {
 			StatusEntity statusEntity = statusDAO.findStatusEntityByCode(questionDTO.getStatusCode());
 			StatusEntity activeStatusEntity = statusDAO.findStatusEntityByCode(DefaultStatusEnum.ACTIVE.getCode());
@@ -205,7 +198,7 @@ public class QuestionServiceImpl implements QuestionService {
 			code = ResponseCodeEnum.SUCCESS.getCode();
 			description = "Question Update Successfully";
 		} catch (Exception e) {
-			System.err.println("Question Update Issue");
+			log.error(e.getMessage());
 		}
 		return new ResponseDTO<>(code, description);
 	}
@@ -217,7 +210,7 @@ public class QuestionServiceImpl implements QuestionService {
 	@Transactional
 	public ResponseDTO<QuestionDTO> deleteQuestion(QuestionDTO questionDTO) {
 		String code = ResponseCodeEnum.FAILED.getCode();
-		String description = "Question Delete Faield";
+		String description = "Question Delete Failed";
 		try {
 			StatusEntity statusEntity = statusDAO.findStatusEntityByCode(DeleteStatusEnum.DELETE.getCode());
 
@@ -235,7 +228,7 @@ public class QuestionServiceImpl implements QuestionService {
 			code = ResponseCodeEnum.SUCCESS.getCode();
 			description = "Question Delete Successfully";
 		} catch (Exception e) {
-			System.err.println("Question Delete Issue");
+			log.error(e.getMessage());
 		}
 		return new ResponseDTO<>(code, description);
 	}
@@ -297,7 +290,7 @@ public class QuestionServiceImpl implements QuestionService {
 			}
 
 		} catch (Exception e) {
-			System.err.println("Question Find Issue");
+			log.error(e.getMessage());
 		}
 		return new ResponseDTO<>(code, description, dto);
 	}
@@ -312,13 +305,13 @@ public class QuestionServiceImpl implements QuestionService {
 		HashMap<String, Object> map = new HashMap<>();
 		String code = ResponseCodeEnum.FAILED.getCode();
 		try {
-			List<DropDownDTO> status = statusCategoryDAO.findStatusCategoryByCode(StatusCategoryEnum.DEFAULT.getCode())
+			List<?> status = statusCategoryDAO.findStatusCategoryByCode(StatusCategoryEnum.DEFAULT.getCode())
 					.getStatusEntities().stream()
 					.sorted(Comparator.comparing(StatusEntity::getDescription)).map(s -> new DropDownDTO(s.getCode(), s.getDescription()))
 					.collect(Collectors.toList());
 
-			List<DropDownDTO> questionCategory = questionCategoryDAO.findAllQuestionCategoryEntities(DefaultStatusEnum.ACTIVE.getCode())
-					.stream().map(s -> new DropDownDTO(s.getCode(), s.getDescription()))
+			List<?> questionCategory = questionCategoryDAO.findAllQuestionCategoryEntities(DefaultStatusEnum.ACTIVE.getCode())
+					.stream().map(s -> new DropDownDTO<>(s.getCode(), s.getDescription()))
 					.collect(Collectors.toList());
 
 			map.put("status", status);
@@ -326,17 +319,17 @@ public class QuestionServiceImpl implements QuestionService {
 
 			code = ResponseCodeEnum.SUCCESS.getCode();
 		} catch (Exception e) {
-			System.err.println("Question Ref Data Issue");
+			log.error(e.getMessage());
 		}
-		return new ResponseDTO<HashMap<String, Object>>(code, map);
+		return new ResponseDTO<>(code, map);
 	}
 
 	@Override
 	@Transactional
 	public DataTableResponseDTO getQuestionsForDataTable(DataTableRequestDTO dataTableRequestDTO) {
-		List<QuestionDTO> list = new ArrayList<>();
+		List<QuestionDTO> list;
 		DataTableResponseDTO responseDTO = new DataTableResponseDTO();
-		Long numOfRecord = Long.valueOf(0);
+		Long numOfRecord;
 		try {
 			list = questionDAO.<List<QuestionEntity>>getDataForGrid(dataTableRequestDTO, CommonConstant.GRID_SEARCH_LIST)
 					.stream().map(entity -> {
@@ -359,6 +352,7 @@ public class QuestionServiceImpl implements QuestionService {
 			responseDTO.setDraw(dataTableRequestDTO.getDraw());
 
 		} catch (Exception e) {
+			log.error(e.getMessage());
 		}
 
 		return responseDTO;

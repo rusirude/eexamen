@@ -1,12 +1,12 @@
 package com.leaf.eexamen.entity;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 
-@EqualsAndHashCode(callSuper = true)
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "question_answer")
 public class QuestionAnswerEntity extends CommonEntity {
