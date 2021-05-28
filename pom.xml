@@ -8,7 +8,6 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
 
-
 	<name>eexamen</name>
 	<description>E-Examen Management System</description>
 
