@@ -22,4 +22,10 @@ public class QuestionEntity extends CommonEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "status", nullable = false)
     private StatusEntity statusEntity;
+    @Column(name = "typ", length = 12, nullable = false)
+    private String type;
+    @Column(name = "grp", length = 2, nullable = false)
+    private String group;
+    @Column(name = "lab", length = 1)
+    private String label;
 }

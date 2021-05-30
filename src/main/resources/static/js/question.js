@@ -54,6 +54,9 @@ var generateFinalObjectForQuestion = () => {
         questionCategories: $("#questionCategory").val().map(x => ({code: x})),
         authCode: $("#authCode").val() || "",
         questionAnswers: generateAnswerObjects(),
+        type:$("#type").val() || "",
+        group:$("#group").val() || "",
+        label:$("#label").val() || ""
     }
 };
 
@@ -93,7 +96,6 @@ var validatorForQuestionStepOne = () => {
     let code = $("#code");
     let description = $("#description");
     let status = $("#status");
-    let category = $("#questionCategory");
 
     if (!code.val()) {
         InputsValidator.inlineEmptyValidation(code);
@@ -105,10 +107,6 @@ var validatorForQuestionStepOne = () => {
     }
     if (!status.val()) {
         InputsValidator.inlineEmptyValidationSelect(status);
-        isValid = false;
-    }
-    if (!(category.val().map(x => ({code: x}))).length) {
-        InputsValidator.inlineEmptyValidationSelect2(category);
         isValid = false;
     }
     return isValid;
@@ -144,9 +142,32 @@ var validatorForQuestionStepTwo = () => {
     return isValid;
 };
 
+var validatorForQuestionStepThree = () => {
+    let isValid = true;
+
+    let category = $("#questionCategory");
+    let type = $("#type");
+    let group = $("#group");
+
+    if (!(category.val().map(x => ({code: x}))).length) {
+        InputsValidator.inlineEmptyValidationSelect2(category);
+        isValid = false;
+    }
+    if (!type.val()) {
+        InputsValidator.inlineEmptyValidationSelect(type);
+        isValid = false;
+    }
+    if (!group.val()) {
+        InputsValidator.inlineEmptyValidationSelect(group);
+        isValid = false;
+    }
+
+    return isValid;
+};
+
 
 var saveForQuestion = () => {
-    if (validatorForQuestionStepTwo()) {
+    if (validatorForQuestionStepThree()) {
         let url = "/question/save";
         let method = "POST";
 
@@ -156,7 +177,7 @@ var saveForQuestion = () => {
 };
 
 var updateForQuestion = () => {
-    if (validatorForQuestionStepTwo()) {
+    if (validatorForQuestionStepThree()) {
         let url = "/question/update";
         let method = "POST";
 
@@ -195,6 +216,9 @@ var populateFormForQuestion = (data) => {
         $("#code").val(data.code || "");
         $("#description").val(data.description || "");
         $("#status").val(data.statusCode || "");
+        $("#type").val(data.type || "");
+        $("#group").val(data.group || "");
+        $("#label").val(data.label || "");
         let cat = data.questionCategories.map(x => (x.code));
         $("#questionCategory").val(cat);
         $("#questionCategory").select2();
@@ -291,6 +315,9 @@ var clearDataForQuestion = () => {
     let code = $("#code");
     let description = $("#description");
     let status = $("#status");
+    let type = $("#type");
+    let group = $("#group");
+    let label = $("#label");
     let questionCategory = $("#questionCategory");
 
     $("#btnSave").show();
@@ -300,6 +327,9 @@ var clearDataForQuestion = () => {
     code.prop("disabled", false);
     description.prop("disabled", false);
     status.prop("disabled", false);
+    type.prop("disabled", false);
+    group.prop("disabled", false);
+    label.prop("disabled", false);
 
     rowCount = 0;
     $("#answerSection")
@@ -315,11 +345,17 @@ var clearDataForQuestion = () => {
     InputsValidator.removeInlineValidation(code);
     InputsValidator.removeInlineValidation(description);
     InputsValidator.removeInlineValidation(status);
+    InputsValidator.removeInlineValidation(type);
+    InputsValidator.removeInlineValidation(group);
+    InputsValidator.removeInlineValidation(label);
     InputsValidator.removeEmptyValidationSelect2(questionCategory);
 
     code.val("");
     description.val("");
     status.val("");
+    type.val("");
+    group.val("");
+    label.val("");
     questionCategory.val([]);
     questionCategory.select2();
     $('#questionCategory').select2("enable");
@@ -361,8 +397,14 @@ var deleteIconClickForQuestion = (code) => {
         $("#code").prop("disabled", true);
         $("#description").prop("disabled", true);
         $("#status").prop("disabled", true);
+        $("#type").prop("disabled", true);
+        $("#group").prop("disabled", true);
+        $("#label").prop("disabled", true);
         $('#questionCategory').select2("enable",true);
         $("#formHeading").html("Delete Question");
+        $("#answerSection")
+            .find('.row.body')
+            .find("input").prop("disabled", true);
         $("#questionTableDiv").hide();
         $("#questionFormDiv").show();
     };
@@ -375,8 +417,13 @@ var cancelForm = () => {
     $("#questionFormDiv").hide();
     $("#questionTableDiv").show();
 };
-var clickNext = () => {
+var clickNextOne = () => {
     if (validatorForQuestionStepOne()) {
+        stepper.next();
+    }
+};
+var clickNextTwo = () => {
+    if (validatorForQuestionStepTwo()) {
         stepper.next();
     }
 };
