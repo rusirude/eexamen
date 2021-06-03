@@ -535,7 +535,8 @@ INSERT INTO `authority`(`code`,`description`,`auth_code`,`url`,`section`,`status
 ('STUD','Student','ROLE_STUD','/student/',4,1,'SYSTEM','SYSTEM'),
 ('STUEXAM','Examination','ROLE_STUEXAM','/studentExams/',4,1,'SYSTEM','SYSTEM'),
 ('STUEXAMADD','Student Exams','ROLE_STUEXAMADD','/studentExamination/',4,1,'SYSTEM','SYSTEM'),
-('EMAIL','Email Editor','ROLE_EMAIL','/email/',1,1,'SYSTEM','SYSTEM');
+('EMAIL','Email Editor','ROLE_EMAIL','/email/',1,1,'SYSTEM','SYSTEM'),
+('EXMTYP','Exam Type','ROLE_EXMTYP','/examType/',4,1,'SYSTEM','SYSTEM');
 
 
 INSERT INTO `sys_role` (`code`,`description`,`status`,`created_by`,`updated_by`) VALUES ('SYSTEM','System',1,'SYSTEM','SYSTEM');
