@@ -476,6 +476,60 @@ CREATE TABLE `student_examination_question_answer` (
     ON DELETE RESTRICT
     ON UPDATE CASCADE);
 
+
+CREATE TABLE `exam_type` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `code` VARCHAR(10) NOT NULL,
+  `description` LONGTEXT NOT NULL,
+  `status` INT NOT NULL,
+  `exam_category` VARCHAR(12) NOT NULL,
+  `question_category` INT NOT NULL,
+  `t_pass_mark` DECIMAL(5,2) DEFAULT 0,
+  `w_pass_mark` DECIMAL(5,2) DEFAULT 0,
+  `created_by` VARCHAR(100) NOT NULL,
+  `created_on` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_by` VARCHAR(100) NOT NULL,
+  `updated_on` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  INDEX `fk_exam_type_status_idx` (`status` ASC),
+  CONSTRAINT `fk_exam_type_status`
+    FOREIGN KEY (`status`)
+    REFERENCES `status` (`id`)
+    ON DELETE RESTRICT
+    ON UPDATE CASCADE,
+  INDEX `fk_exam_type_question_category_idx` (`status` ASC),
+  CONSTRAINT `fk_exam_type_question_category`
+    FOREIGN KEY (`question_category`)
+    REFERENCES `question_category` (`id`)
+    ON DELETE RESTRICT
+    ON UPDATE CASCADE);
+
+CREATE TABLE `exam_type_question_model` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `exam_type` INT NOT NULL,
+  `typ` VARCHAR(12) NOT NULL,
+  `grp` VARCHAR(2) NOT NULL,
+  `lab` VARCHAR(1) NULL,
+  `no_question` INT NOT NULL DEFAULT 0,
+  `status` INT NOT NULL,
+  `created_by` VARCHAR(100) NOT NULL,
+  `created_on` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_by` VARCHAR(100) NOT NULL,
+  `updated_on` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  INDEX `fk_exam_type_question_model_exam_type_idx` (`status` ASC),
+  CONSTRAINT `fk_exam_type_question_models_exam_type`
+    FOREIGN KEY (`exam_type`)
+    REFERENCES `exam_type` (`id`)
+    ON DELETE RESTRICT
+    ON UPDATE CASCADE,
+  INDEX `fk_exam_type_question_models_status_idx` (`status` ASC),
+  CONSTRAINT `fk_exam_type_question_models_status`
+    FOREIGN KEY (`status`)
+    REFERENCES `status` (`id`)
+    ON DELETE RESTRICT
+    ON UPDATE CASCADE);
+
     
 INSERT INTO `status_category` (`code`, `description`) VALUES ('DEFAULT', 'Default');
 INSERT INTO `status_category` (`code`,`description`) VALUES ('DELETE','Delete');
