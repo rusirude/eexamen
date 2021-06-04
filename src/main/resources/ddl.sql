@@ -353,13 +353,10 @@ CREATE TABLE `examination` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `code` VARCHAR(10) NOT NULL,
   `description` VARCHAR(50) NOT NULL,
-  `question_category` INT NOT NULL,
-  `no_question` INT NOT NULL DEFAULT 0,
+  `exam_type` INT NOT NULL,
   `duration` VARCHAR(10),
   `date_on` DATETIME NULL,
   `location` VARCHAR(200),
-  `type` VARCHAR(100),
-  `pass_mark` DECIMAL(5,2) DEFAULT 0,
   `status` INT NOT NULL,
   `effective_on` DATETIME NULL,
   `expier_on` DATETIME  NULL,
@@ -368,10 +365,10 @@ CREATE TABLE `examination` (
   `updated_by` VARCHAR(100) NOT NULL,
   `updated_on` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  INDEX `fk_examination_question_category_idx` (`status` ASC),
-  CONSTRAINT `fk_examination_question_category`
-    FOREIGN KEY (`question_category`)
-    REFERENCES `question_category` (`id`)
+  INDEX `fk_examination_exam_type_idx` (`exam_type` ASC),
+  CONSTRAINT `fk_examination_exam_type`
+    FOREIGN KEY (`exam_type`)
+    REFERENCES `exam_type` (`id`)
     ON DELETE RESTRICT
     ON UPDATE CASCADE,
   INDEX `fk_examination_status_idx` (`status` ASC),

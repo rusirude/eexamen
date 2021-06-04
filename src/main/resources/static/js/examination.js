@@ -5,16 +5,13 @@ var generateFinalObjectForExamination = ()=>{
 	return {
 		code:$("#code").val()||"",
 		description:$("#description").val()||"",
-		questionCategoryCode: $("#questionCategory").val()||"",
-		noQuestion: $("#noQuestion").val()||"",
+		examTypeCode: $("#examType").val()||"",
 		duration: $("#duration").val()||"",
 		statusCode:$("#status").val()||"",
 		dateOn:$("#dateOn").val()||"",
 		location:$("#location").val()||"",
-		type:$("#type").val()||"",
-		passMark:$("#passMark").val()||"",
 		effectiveOn:$("#effectiveOn").val()||"",
-		expireOn:$("#expireOn").val()||"",
+		expireOn:$("#expireOn").val()||""
 	}
 };
 
@@ -37,14 +34,11 @@ var validatorForExamination = ()=>{
 	let isValid = true;
 	let code = $("#code");
 	let description = $("#description");
-	let noQuestion = $("#noQuestion");
 	let duration = $("#duration");
-	let questionCategory = $("#questionCategory");
+	let examType = $("#examType");
 	let status = $("#status");
 	let dateOn = $("#dateOn");
 	let location=$("#location");
-	let type = $("#type");
-	let passMark = $("#passMark");
 	let effectiveOn = $("#effectiveOn");
 	let expireOn = $("#expireOn");
 	if(! code.val()){
@@ -53,10 +47,6 @@ var validatorForExamination = ()=>{
 	}
 	if(! description.val()){
 		InputsValidator.inlineEmptyValidation(description);
-		isValid = false;
-	}
-	if(! parseInt(noQuestion.val()||0)){
-		InputsValidator.inlineEmptyValidationNumber(noQuestion);
 		isValid = false;
 	}
 	if(! duration.val()){
@@ -71,14 +61,6 @@ var validatorForExamination = ()=>{
 		InputsValidator.inlineEmptyValidation(location);
 		isValid = false;
 	}
-	if(! type.val()){
-		InputsValidator.inlineEmptyValidation(type);
-		isValid = false;
-	}
-	if(! parseInt(passMark.val()||0)){
-		InputsValidator.inlineEmptyValidation(passMark);
-		isValid = false;
-	}
 	if(! effectiveOn.val()){
 		InputsValidator.inlineEmptyValidation(effectiveOn);
 		isValid = false;
@@ -87,12 +69,8 @@ var validatorForExamination = ()=>{
 		InputsValidator.inlineEmptyValidation(expireOn);
 		isValid = false;
 	}
-	if(! questionCategory.val()){
-		InputsValidator.inlineEmptyValidationSelect(questionCategory);
-		isValid = false;
-	}
-	if(questionCategory.val() && parseInt(questionCategory.find("option:selected").data('count')||0) < parseInt(noQuestion.val()||0)){
-		InputsValidator.inlineEmptyValidation(noQuestion,"Invalid No. of Question");
+	if(! examType.val()){
+		InputsValidator.inlineEmptyValidationSelect(examType);
 		isValid = false;
 	}
 	if(! status.val()){
@@ -189,14 +167,11 @@ var populateFormForExamination = (data) => {
 	if(data){
 		$("#code").val(data.code || "");
 		$("#description").val(data.description || "");
-		$("#noQuestion").val(data.noQuestion || 0);
 		$("#duration").val(data.duration || "");
-		$("#questionCategory").val(data.questionCategoryCode || "");
+		$("#examType").val(data.examTypeCode || "");
 		$("#status").val(data.statusCode || "");
 		$("#dateOn").val(data.dateOn || "");
 		$("#location").val(data.location || "");
-		$("#type").val(data.type || "");
-		$("#passMark").val(data.passMark || "");
 		$("#effectiveOn").val(data.effectiveOn || "");
 		$("#expireOn").val(data.expireOn || "");
 	}
@@ -214,8 +189,8 @@ var loadReferenceDataForExamination = (callback)=>{
             	for(let s of data.data.status||[]){
             		$("#status").append(`<option value="${s.code}">${s.description}</option>`);
             	}
-            	for(let sc of data.data.questionCategory||[]){
-            		$("#questionCategory").append(`<option data-count="${sc.data}" value="${sc.code}">${sc.description}</option>`);
+            	for(let sc of data.data.examType||[]){
+            		$("#examType").append(`<option  value="${sc.code}">${sc.description}</option>`);
             	}
 
             	if(callback){
@@ -257,7 +232,7 @@ var loadExaminationTable = ()=>{
                         columns: [
                             { data: "code"                           ,name:"code"            },
                             { data: "description"         			 ,name:"description"     },
-                            { data: "questionCategoryDescription"    ,name:"questionCategory"},
+                            { data: "examTypeDescription"            ,name:"examType"},
                             // { data: "effectiveOn"                    ,name:"effectiveOn"     },
                             // { data: "expireOn"                       ,name:"expireOn"        },
                             { data: "statusDescription"              ,name:"status"          },
@@ -283,16 +258,13 @@ var loadExaminationTable = ()=>{
 var clearDataForExamination = ()=>{
 	let code = $("#code");
 	let description = $("#description");
-	let questionCategory = $("#questionCategory");
-	let noQuestion = $("#noQuestion");
+	let examType = $("#examType");
 	let duration = $("#duration");
 	let status = $("#status");
 	let effectiveOn = $("#effectiveOn");
 	let expireOn = $("#expireOn");
 	let dateOn = $("#dateOn");
 	let location=$("#location");
-	let type = $("#type");
-	let passMark = $("#passMark");
 
 	$("#btnSave").show();
 	$("#btnUpdate").hide();
@@ -302,41 +274,32 @@ var clearDataForExamination = ()=>{
 
 	code.prop("disabled",false);
 	description.prop("disabled",false);
-	questionCategory.prop("disabled",false);
-	noQuestion.prop("disabled",false);
+	examType.prop("disabled",false);
 	duration.prop("disabled",false);
 	status.prop("disabled",false);
 	dateOn.prop("disabled",false);
 	location.prop("disabled",false);
-	type.prop("disabled",false);
-	passMark.prop("disabled",false);
 	effectiveOn.prop("disabled",false);
 	expireOn.prop("disabled",false);
 
 
 	InputsValidator.removeInlineValidation(code);
 	InputsValidator.removeInlineValidation(description);
-	InputsValidator.removeInlineValidation(questionCategory);
-	InputsValidator.removeInlineValidation(noQuestion);
+	InputsValidator.removeInlineValidation(examType);
 	InputsValidator.removeInlineValidation(duration);
 	InputsValidator.removeInlineValidation(status);
 	InputsValidator.removeInlineValidation(dateOn);
 	InputsValidator.removeInlineValidation(location);
-	InputsValidator.removeInlineValidation(type);
-	InputsValidator.removeInlineValidation(passMark);
 	InputsValidator.removeInlineValidation(effectiveOn);
 	InputsValidator.removeInlineValidation(expireOn);
 
 	code.val("");
 	description.val("");
-	questionCategory.val("");
-	noQuestion.val(0);
+	examType.val("");
 	duration.val("");
 	status.val("");
 	dateOn.val("");
 	location.val("");
-	type.val("");
-	passMark.val(0.00);
 	effectiveOn.val("");
 	expireOn.val("");
 
@@ -374,14 +337,11 @@ var deleteIconClickForExamination = (code)=>{
 		populateFormForExamination(data);
 		$("#code").prop("disabled",true);
 		$("#description").prop("disabled",true);
-		$("#questionCategory").prop("disabled",true);
-		$("#noQuestion").prop("disabled",true);
+		$("#examType").prop("disabled",true);
 		$("#duration").prop("disabled",true);
 		$("#status").prop("disabled",true);
 		$("#dateOn").prop("disabled",true);
 		$("#location").prop("disabled",true);
-		$("#type").prop("disabled",true);
-		$("#passMark").prop("disabled",true);
 		$("#effectiveOn").prop("disabled",true);
 		$("#expireOn").prop("disabled",true);
 		$("#formHeading").html("Delete Examination");

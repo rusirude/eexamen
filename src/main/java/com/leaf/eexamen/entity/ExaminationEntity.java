@@ -21,22 +21,16 @@ public class ExaminationEntity extends CommonEntity {
     @Column(name = "description", length = 50, nullable = false)
     private String description;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "question_category", nullable = false)
-    private QuestionCategoryEntity questionCategoryEntity;
+    @JoinColumn(name = "exam_type", nullable = false)
+    private ExamTypeEntity examTypeEntity;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "status", nullable = false)
     private StatusEntity statusEntity;
-    @Column(name = "no_question")
-    private Integer noQuestion;
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "date_on")
     private Date dateOn;
     @Column(name = "location")
     private String location;
-    @Column(name = "type")
-    private String type;
-    @Column(name = "pass_mark")
-    private Double passMark;
     @Column(name = "duration")
     private String duration;
     @Temporal(TemporalType.TIMESTAMP)
