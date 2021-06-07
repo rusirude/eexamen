@@ -7,10 +7,7 @@ import com.leaf.eexamen.dto.common.DataTableResponseDTO;
 import com.leaf.eexamen.dto.common.DropDownDTO;
 import com.leaf.eexamen.dto.common.ResponseDTO;
 import com.leaf.eexamen.entity.*;
-import com.leaf.eexamen.enums.DefaultStatusEnum;
-import com.leaf.eexamen.enums.EmailEnum;
-import com.leaf.eexamen.enums.ExamStatusEnum;
-import com.leaf.eexamen.enums.ResponseCodeEnum;
+import com.leaf.eexamen.enums.*;
 import com.leaf.eexamen.service.StartExaminationService;
 import com.leaf.eexamen.utility.CommonConstant;
 import com.leaf.eexamen.utility.CommonMethod;
@@ -39,6 +36,7 @@ public class StartExaminationServiceImpl implements StartExaminationService {
     private QuestionDAO questionDAO;
     private QuestionAnswerDAO questionAnswerDAO;
     private StudentExaminationQuestionAnswerDAO studentExaminationQuestionAnswerDAO;
+    private ExamTypeQuestionModelDAO examTypeQuestionModelDAO;
     private StudentDAO studentDAO;
     private SysUserDAO sysUserDAO;
     private ExaminationDAO examinationDAO;
@@ -64,7 +62,7 @@ public class StartExaminationServiceImpl implements StartExaminationService {
                         dto.setExaminationCode(entity.getExaminationEntity().getCode());
                         dto.setExaminationDescription(entity.getExaminationEntity().getDescription());
                         dto.setDuration(entity.getExaminationEntity().getDuration());
-                        dto.setNoQuestion(entity.getExaminationEntity().getNoQuestion());
+                        dto.setNoQuestion(Optional.ofNullable(entity.getTCount()).orElse(0)+Optional.ofNullable(entity.getWCount()).orElse(0));
                         dto.setStatusCode(entity.getStatusEntity().getCode());
                         dto.setStatusDescription(entity.getStatusEntity().getDescription());
                         return dto;
@@ -98,26 +96,52 @@ public class StartExaminationServiceImpl implements StartExaminationService {
             StatusEntity statusEntity = statusDAO.findStatusEntityByCode(DefaultStatusEnum.ACTIVE.getCode());
             StatusEntity startExamStatusEntity = statusDAO.findStatusEntityByCode(ExamStatusEnum.START.getCode());
             StatusEntity closedExamStatusEntity = statusDAO.findStatusEntityByCode(ExamStatusEnum.CLOSED.getCode());
+            List<Long> questionIds = new ArrayList<>();
 
             if (ExamStatusEnum.PENDING.getCode().equals(studentExaminationEntity.getStatusEntity().getCode())) {
-                questionDAO.findAllQuestionEntitiesRandomly(statusEntity.getId(), studentExaminationEntity.getExaminationEntity().getNoQuestion(), studentExaminationEntity.getExaminationEntity().getQuestionCategoryEntity().getId())
-                        .forEach(questionEntity -> {
-                            StudentExaminationQuestionAnswerEntity questionAnswerEntity = new StudentExaminationQuestionAnswerEntity();
-                            questionAnswerEntity.setStudentExaminationEntity(studentExaminationEntity);
-                            questionAnswerEntity.setQuestionEntity(questionEntity);
-                            questionAnswerEntity.setSeq(i.incrementAndGet());
+                ExamTypeEntity examTypeEntity = studentExaminationEntity.getExaminationEntity().getExamTypeEntity();
+                Optional.ofNullable(examTypeQuestionModelDAO.findAllExamTypeQuestionModelEntitiesByExamTypeAndQuestionType(examTypeEntity.getId(),QuestionTypeEnum.THEORIM.getCode(),statusEntity.getCode())).orElse(Collections.emptyList())
+                        .forEach(entity -> questionDAO.findAllQuestionEntitiesRandomly(statusEntity.getId(), entity.getNoQuestion(), examTypeEntity.getQuestionCategoryEntity().getId(), entity.getGroup(), entity.getLabel(), questionIds)
+                                .forEach(questionEntity -> {
+                                    questionIds.add(questionEntity.getId());
+                                    StudentExaminationQuestionAnswerEntity questionAnswerEntity = new StudentExaminationQuestionAnswerEntity();
+                                    questionAnswerEntity.setStudentExaminationEntity(studentExaminationEntity);
+                                    questionAnswerEntity.setQuestionEntity(questionEntity);
+                                    questionAnswerEntity.setSeq(i.incrementAndGet());
 
-                            commonMethod.getPopulateEntityWhenInsert(questionAnswerEntity);
-                            studentExaminationQuestionAnswerDAO.saveStudentExaminationQuestionAnswerEntity(questionAnswerEntity);
+                                    commonMethod.getPopulateEntityWhenInsert(questionAnswerEntity);
+                                    studentExaminationQuestionAnswerDAO.saveStudentExaminationQuestionAnswerEntity(questionAnswerEntity);
 
-                        });
+                                }));
+
+                studentExaminationEntity.setTCount(questionIds.size());
+
+                Optional.ofNullable(examTypeQuestionModelDAO.findAllExamTypeQuestionModelEntitiesByExamTypeAndQuestionType(examTypeEntity.getId(),QuestionTypeEnum.WETGEVING.getCode(),statusEntity.getCode())).orElse(Collections.emptyList())
+                        .forEach(entity -> questionDAO.findAllQuestionEntitiesRandomly(statusEntity.getId(), entity.getNoQuestion(), examTypeEntity.getQuestionCategoryEntity().getId(), entity.getGroup(), entity.getLabel(), questionIds)
+                                .forEach(questionEntity -> {
+                                    questionIds.add(questionEntity.getId());
+                                    StudentExaminationQuestionAnswerEntity questionAnswerEntity = new StudentExaminationQuestionAnswerEntity();
+                                    questionAnswerEntity.setStudentExaminationEntity(studentExaminationEntity);
+                                    questionAnswerEntity.setQuestionEntity(questionEntity);
+                                    questionAnswerEntity.setSeq(i.incrementAndGet());
+
+                                    commonMethod.getPopulateEntityWhenInsert(questionAnswerEntity);
+                                    studentExaminationQuestionAnswerDAO.saveStudentExaminationQuestionAnswerEntity(questionAnswerEntity);
+
+                                }));
+
+
+                studentExaminationEntity.setWCount(questionIds.size()-studentExaminationEntity.getTCount());
+
 
                 String[] duration = studentExaminationEntity.getExaminationEntity().getDuration().split(":");
                 Date expectedTime = commonMethod.addHoursAndMinutesToDate(systemDate, Integer.parseInt(duration[0]), Integer.parseInt(duration[1]));
                 Date endDateTime = getEndDateTimeForExam(expectedTime, studentExaminationEntity.getExaminationEntity().getExpireOn());
 
                 studentExaminationEntity.setStatusEntity(startExamStatusEntity);
-                studentExaminationEntity.setPassMark(studentExaminationEntity.getExaminationEntity().getPassMark());
+                studentExaminationEntity.setTPassMark(studentExaminationEntity.getExaminationEntity().getExamTypeEntity().getTPassMark());
+                studentExaminationEntity.setWPassMark(studentExaminationEntity.getExaminationEntity().getExamTypeEntity().getWPassMark());
+
                 studentExaminationEntity.setStartOn(systemDate);
                 studentExaminationEntity.setEndOn(endDateTime);
 
@@ -169,6 +193,7 @@ public class StartExaminationServiceImpl implements StartExaminationService {
                     .orElse(Collections.emptyList()).size();
             StudentExaminationEntity studentExaminationEntity = studentQuestionAnswerEntity.getStudentExaminationEntity();
             StatusEntity closedExamStatusEntity = statusDAO.findStatusEntityByCode(ExamStatusEnum.CLOSED.getCode());
+            Integer totalQuestions = studentQuestionAnswerEntity.getStudentExaminationEntity().getTCount()+studentQuestionAnswerEntity.getStudentExaminationEntity().getWCount();
 
             String[] duration = studentExaminationEntity.getExaminationEntity().getDuration().split(":");
             Date endDateTime = commonMethod.addHoursAndMinutesToDate(studentExaminationEntity.getStartOn(), Integer.parseInt(duration[0]), Integer.parseInt(duration[1]));
@@ -198,8 +223,8 @@ public class StartExaminationServiceImpl implements StartExaminationService {
                 examQuestionDTO = new ExamQuestionDTO();
                 examQuestionDTO.setQuestion(questionDTO);
                 examQuestionDTO.setDuration(studentQuestionAnswerEntity.getStudentExaminationEntity().getExaminationEntity().getDuration());
-                examQuestionDTO.setTotal(studentQuestionAnswerEntity.getStudentExaminationEntity().getExaminationEntity().getNoQuestion());
-                examQuestionDTO.setDone(studentQuestionAnswerEntity.getStudentExaminationEntity().getExaminationEntity().getNoQuestion() - notAnswer);
+                examQuestionDTO.setTotal(totalQuestions);
+                examQuestionDTO.setDone(totalQuestions - notAnswer);
                 examQuestionDTO.setStartTime(commonMethod.dateTimeToString(studentQuestionAnswerEntity.getStudentExaminationEntity().getStartOn()));
                 examQuestionDTO.setEndTime(commonMethod.dateTimeToString(studentQuestionAnswerEntity.getStudentExaminationEntity().getEndOn()));
                 examQuestionDTO.setCurrentTime(commonMethod.dateTimeToString(systemDate, CommonConstant.SYSTEM_DATE_TIME_3_FORMAT));
@@ -284,25 +309,37 @@ public class StartExaminationServiceImpl implements StartExaminationService {
             StudentExaminationEntity studentExaminationEntity = studentExaminationDAO.findStudentExaminationEntity(studentExam);
             studentExaminationQuestionAnswerDAO.findStudentExaminationQuestionAnswerEntityByStudentExamination(studentExam)
                     .forEach(studentExaminationQuestionAnswerEntity -> {
-                        finalResultDTO.setTotal(finalResultDTO.getTotal() + 1);
-                        if (Objects.isNull(studentExaminationQuestionAnswerEntity.getQuestionAnswerEntity()))
-                            finalResultDTO.setNotAnswered(finalResultDTO.getNotAnswered() + 1);
-                        else if (studentExaminationQuestionAnswerEntity.isCorrect())
-                            finalResultDTO.setCorrect(finalResultDTO.getCorrect() + 1);
-                        else
-                            finalResultDTO.setWrong(finalResultDTO.getWrong() + 1);
+                        if(QuestionTypeEnum.THEORIM.getCode().equals(studentExaminationQuestionAnswerEntity.getQuestionEntity().getType())){
+                            finalResultDTO.setTTotal(finalResultDTO.getTTotal() + 1);
+                            if (Objects.isNull(studentExaminationQuestionAnswerEntity.getQuestionAnswerEntity()))
+                                finalResultDTO.setTNotAnswered(finalResultDTO.getTNotAnswered() + 1);
+                            else if (studentExaminationQuestionAnswerEntity.isCorrect())
+                                finalResultDTO.setTCorrect(finalResultDTO.getTCorrect() + 1);
+                            else
+                                finalResultDTO.setTWrong(finalResultDTO.getTWrong() + 1);
+                        }
+                        else{
+                            finalResultDTO.setWTotal(finalResultDTO.getWTotal() + 1);
+                            if (Objects.isNull(studentExaminationQuestionAnswerEntity.getQuestionAnswerEntity()))
+                                finalResultDTO.setWNotAnswered(finalResultDTO.getWNotAnswered() + 1);
+                            else if (studentExaminationQuestionAnswerEntity.isCorrect())
+                                finalResultDTO.setWCorrect(finalResultDTO.getWCorrect() + 1);
+                            else
+                                finalResultDTO.setWWrong(finalResultDTO.getWWrong() + 1);
+                        }
                     });
-            if (finalResultDTO.getTotal() > 0) {
-                int result = BigDecimal.valueOf(((double) finalResultDTO.getCorrect() / (double) finalResultDTO.getTotal()) * 100)
-                        .setScale(0, RoundingMode.HALF_UP).toBigInteger().intValue();
-                finalResultDTO.setFinalMark(result);
-            } else
-                finalResultDTO.setFinalMark(0);
+
+            int tResult = BigDecimal.valueOf(((double) finalResultDTO.getTCorrect() / (double) finalResultDTO.getTTotal()) * 100)
+                    .setScale(0, RoundingMode.HALF_UP).toBigInteger().intValue();
+            int wResult = BigDecimal.valueOf(((double) finalResultDTO.getWCorrect() / (double) finalResultDTO.getWTotal()) * 100)
+                    .setScale(0, RoundingMode.HALF_UP).toBigInteger().intValue();
+            finalResultDTO.setTFinalMark(tResult);
+            finalResultDTO.setWFinalMark(wResult);
 
             finalResultDTO.setName(studentExaminationEntity.getSysUserEntity().getTitleEntity().getDescription() + studentExaminationEntity.getSysUserEntity().getName());
             finalResultDTO.setLocation(studentExaminationEntity.getExaminationEntity().getLocation());
             finalResultDTO.setDateOn(commonMethod.dateTimeToString(studentExaminationEntity.getExaminationEntity().getDateOn()));
-            finalResultDTO.setType(studentExaminationEntity.getExaminationEntity().getType());
+            finalResultDTO.setType(studentExaminationEntity.getExaminationEntity().getExamTypeEntity().getDescription());
             finalResultDTO.setPass(Optional.ofNullable(studentExaminationEntity.getPass()).orElse(false) ? "Geslaagd" : "Niet geslaagd");
             finalResultDTO.setPassed(Optional.ofNullable(studentExaminationEntity.getPass()).orElse(false));
             code = ResponseCodeEnum.SUCCESS.getCode();
@@ -352,7 +389,7 @@ public class StartExaminationServiceImpl implements StartExaminationService {
                         dto.setExaminationCode(entity.getExaminationEntity().getCode());
                         dto.setExaminationDescription(entity.getExaminationEntity().getDescription());
                         dto.setDuration(entity.getExaminationEntity().getDuration());
-                        dto.setNoQuestion(entity.getExaminationEntity().getNoQuestion());
+                        dto.setNoQuestion(Optional.ofNullable(entity.getTCount()).orElse(0)+Optional.ofNullable(entity.getWCount()).orElse(0));
                         dto.setStatusCode(entity.getStatusEntity().getCode());
                         dto.setStatusDescription(entity.getStatusEntity().getDescription());
                         return dto;
@@ -415,7 +452,7 @@ public class StartExaminationServiceImpl implements StartExaminationService {
                         dto.setExaminationDescription(entity.getExaminationEntity().getDescription());
                         dto.setDateOn(commonMethod.dateTimeToString(entity.getExaminationEntity().getDateOn()));
                         dto.setDuration(entity.getExaminationEntity().getDuration());
-                        dto.setNoQuestion(entity.getExaminationEntity().getNoQuestion());
+                        dto.setNoQuestion(Optional.ofNullable(entity.getTCount()).orElse(0)+Optional.ofNullable(entity.getWCount()).orElse(0));
                         dto.setStatusCode(entity.getStatusEntity().getCode());
                         dto.setStatusDescription(entity.getStatusEntity().getDescription());
                         return dto;
@@ -574,8 +611,10 @@ public class StartExaminationServiceImpl implements StartExaminationService {
         calculateAnswer(studentExaminationEntity);
 
         FinalResultDTO finalResultDTO = getFinalResult(studentExam).getData();
-        studentExaminationEntity.setFinalMark(Double.valueOf(finalResultDTO.getFinalMark()));
-        studentExaminationEntity.setPass(studentExaminationEntity.getPassMark().compareTo(Double.valueOf(finalResultDTO.getFinalMark())) <= 0);
+        studentExaminationEntity.setTFinalMark(Double.valueOf(finalResultDTO.getTFinalMark()));
+        studentExaminationEntity.setWFinalMark(Double.valueOf(finalResultDTO.getWFinalMark()));
+        studentExaminationEntity.setPass((studentExaminationEntity.getTPassMark().compareTo(Double.valueOf(finalResultDTO.getTFinalMark())) <= 0) &&
+                (studentExaminationEntity.getWPassMark().compareTo(Double.valueOf(finalResultDTO.getWFinalMark())) <= 0));
 
         commonMethod.getPopulateEntityWhenUpdate(studentExaminationEntity);
         studentExaminationDAO.updateStudentExaminationEntity(studentExaminationEntity);
@@ -588,14 +627,14 @@ public class StartExaminationServiceImpl implements StartExaminationService {
 
         StudentExaminationEntity studentExaminationEntity = studentExaminationDAO.findStudentExaminationEntity(studentExam);
         parameters.put("examination", studentExaminationEntity.getExaminationEntity().getDescription());
-        parameters.put("category", studentExaminationEntity.getExaminationEntity().getQuestionCategoryEntity().getDescription());
-        parameters.put("finalMark", studentExaminationEntity.getFinalMark().intValue());
+        parameters.put("tFinalMark", studentExaminationEntity.getTFinalMark().intValue());
+        parameters.put("wFinalMark", studentExaminationEntity.getWFinalMark().intValue());
         parameters.put("isPass", Optional.ofNullable(studentExaminationEntity.getPass()).orElse(false) ? "Geslaagd" : "Niet geslaagd");
         parameters.put("name", studentExaminationEntity.getSysUserEntity().getTitleEntity().getDescription() + " " + studentExaminationEntity.getSysUserEntity().getName());
         parameters.put("email", studentExaminationEntity.getSysUserEntity().getUsername());
         parameters.put("location", studentExaminationEntity.getExaminationEntity().getLocation());
         parameters.put("date", studentExaminationEntity.getExaminationEntity().getDateOn());
-        parameters.put("type", studentExaminationEntity.getExaminationEntity().getType());
+        parameters.put("type", studentExaminationEntity.getExaminationEntity().getExamTypeEntity().getDescription());
         parameters.put("finalSummery", getFinalResult(studentExam).getData());
 
         reportDTO.setReportParams(parameters);

@@ -6,11 +6,16 @@ import lombok.Data;
 
 @Data
 public class FinalResultDTO {
-    private Integer finalMark;
-    private int correct;
-    private int wrong;
-    private int notAnswered;
-    private int total;
+    private Integer tFinalMark;
+    private int tCorrect;
+    private int tWrong;
+    private int tNotAnswered;
+    private int tTotal;
+    private Integer wFinalMark;
+    private int wCorrect;
+    private int wWrong;
+    private int wNotAnswered;
+    private int wTotal;
     private String name;
     private String location;
     @JsonFormat(pattern = CommonConstant.SYSTEM_DATE_TIME_2_FORMAT)

@@ -31,10 +31,18 @@ public class StudentExaminationEntity extends CommonEntity {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "end_on")
     private Date endOn;
-    @Column(name = "final_mark")
-    private Double finalMark;
+    @Column(name = "t_final_mark")
+    private Double tFinalMark;
+    @Column(name = "w_final_mark")
+    private Double wFinalMark;
     @Column(name = "is_pass")
     private Boolean pass;
-    @Column(name = "pass_mark")
-    private Double passMark;
+    @Column(name = "t_pass_mark")
+    private Double tPassMark;
+    @Column(name = "w_pass_mark")
+    private Double wPassMark;
+    @Column(name = "t_count")
+    private Integer tCount;
+    @Column(name = "w_count")
+    private Integer wCount;
 }
