@@ -13,13 +13,25 @@ var rowCreator = (type) => {
 						<div class="form-group col-sm-3">
                             <input type="hidden" name="${type}_ex_tp_id_${rowCount}"/>
                             <select class="form-control form-control-sm" id="${type}_group_${rowCount}">
-
+                                        <option value=""></option>
+                                        <option value="1">Group 1</option>
+                                        <option value="2">Group 2</option>
+                                        <option value="3">Group 3</option>
+                                        <option value="4">Group 4</option>
+                                        <option value="5">Group 5</option>
+                                        <option value="6">Group 6</option>
+                                        <option value="7">Group 7</option>
+                                        <option value="8">Group 8</option>
+                                        <option value="9">Group 9</option>
+                                        <option value="10">Group 10</option>
                             </select>
                             <span id="${type}_group_${rowCount}-error" class="error invalid-feedback"></span>
                         </div>
                         <div class="form-group col-sm-3">
                             <select class="form-control form-control-sm" id="${type}_label_${rowCount}">
-
+                                    <option value=""></option>
+                                    <option value="A">A</option>
+                                    <option value="B">B</option>
                             </select>
                             <span id="${type}_label_${rowCount}-error" class="error invalid-feedback"></span>
                         </div>
@@ -59,10 +71,10 @@ var generateFinalObjectForExamType = () => {
         description: $("#description").val() || "",
         examCategoryCode: $("#examCategory").val() || "",
         questionCategoryCode: $("#questionCategory").val() || "",
-        tPassMark: $("#t_passmark").val() || 0,
-        wPassMark: $("#w_passmark").val() || 0,
-        tQuestions: generateQuestionModelObjects('t'),
-        wQuestions: generateQuestionModelObjects('w')
+        qtPassMark: $("#t_passmark").val() || 0,
+        qwPassMark: $("#w_passmark").val() || 0,
+        qtQuestions: generateQuestionModelObjects('t'),
+        qwQuestions: generateQuestionModelObjects('w')
     }
 };
 
@@ -173,20 +185,21 @@ var validatorForExamTypeStepOne = () => {
 var validatorForExamQuestionModel = (type) => {
     let isValid = true;
 
+    let passMark = $("#"+type+"_passmark");
 
+    if (!parseInt(passMark.val()||0)) {
+        InputsValidator.inlineEmptyValidationNumber(passMark);
+        isValid = false;
+    }
     for (let ele of $("#"+type+"Section").find('.row.body')) {
 
         if (!$(ele).find(`select[id ^= "${type}_group_"]`).val()) {
             InputsValidator.inlineEmptyValidationSelect($(ele).find(`select[id ^= "${type}_group_"]`));
             isValid = false;
         }
-        if (!$(ele).find(`select[id ^= "${type}_label_"]`).val()) {
-            InputsValidator.inlineEmptyValidationSelect($(ele).find(`select[id ^= "${type}_label_"]`));
-            isValid = false;
-        }
 
-        if(! parseInt((ele).find('input[type=number]').val()||0)){
-            InputsValidator.inlineEmptyValidationNumber((ele).find('input[type=number]'));
+        if(! parseInt($(ele).find('input[type=number]').val()||0)){
+            InputsValidator.inlineEmptyValidationNumber($(ele).find('input[type=number]'));
             isValid = false;
         }
     }
@@ -234,7 +247,7 @@ var findDetailByCodeForExamType = (code, callback) => {
     let failedFunction = (data) => {
         DialogBox.openMsgBox("Server Error", 'error');
     };
-    let url = "/exmType/loadExamTypeByCode";
+    let url = "/examType/loadExamTypeByCode";
     let method = "POST";
     callToserver(url, method, {code: code}, successFunction, failedFunction);
 };
@@ -246,36 +259,36 @@ var populateFormForExamType = (data) => {
         $("#description").val(data.description || "");
         $("#status").val(data.statusCode || "");
         $("#examCategory").val(data.examCategoryCode || "");
-        $("#questionCategory").val(data.questionCategory || "");
-        $("#t_passmark").val(data.tPassMark || 0);
-        $("#w_passmark").val(data.wPassMark || 0);
+        $("#questionCategory").val(data.questionCategoryCode || "");
+        $("#t_passmark").val(data.qtPassMark || 0);
+        $("#w_passmark").val(data.qwPassMark || 0);
         $("#type").val(data.type || "");
         $("#group").val(data.group || "");
         $("#label").val(data.label || "");
-        if ((data.tQuestions || []).length) {
+        if ((data.qtQuestions || []).length) {
             tRowCount = 0;
             $("#tSection")
                 .find('.row.body').remove();
 
-            for (let e of data.tQuestions) {
-                let row = $(rowCreator());
+            for (let e of data.qtQuestions) {
+                let row = $(rowCreator('t'));
                 row.find("input[type=hidden]").val(e.id);
-                row.find(`select[id ^= "${type}_group_"]`).val(e.group);
-                row.find(`select[id ^= "${type}_group_"]`).val(e.label);
+                row.find(`select[id ^= "t_group_"]`).val(e.group);
+                row.find(`select[id ^= "t_label_"]`).val(e.label);
                 row.find('input[type=number]').val(e.noQuestion);
                 $("#tSection").append(row);
             }
         }
-        if ((data.wQuestions || []).length) {
-            tRowCount = 0;
+        if ((data.qwQuestions || []).length) {
+            wRowCount = 0;
             $("#wSection")
                 .find('.row.body').remove();
 
-            for (let e of data.wQuestions) {
-                let row = $(rowCreator());
+            for (let e of data.qwQuestions) {
+                let row = $(rowCreator('w'));
                 row.find("input[type=hidden]").val(e.id);
-                row.find(`select[id ^= "${type}_group_"]`).val(e.group);
-                row.find(`select[id ^= "${type}_group_"]`).val(e.label);
+                row.find(`select[id ^= "w_group_"]`).val(e.group);
+                row.find(`select[id ^= "w_label_"]`).val(e.label);
                 row.find('input[type=number]').val(e.noQuestion);
                 $("#wSection").append(row);
             }
@@ -320,7 +333,7 @@ var loadReferenceDataForExamType = (callback) => {
 };
 
 var loadExamTypeTable = () => {
-    questionTable = $('#examTypeTable').DataTable({
+    examTypeTable = $('#examTypeTable').DataTable({
         ajax: {
             url: "/examType/loadExamTypes",
             contentType: "application/json",
@@ -397,7 +410,7 @@ var clearDataForExamType = () => {
         .find('.row.body').remove();
 
 
-    $("#wSection").append(rowCreator('t'));
+    $("#wSection").append(rowCreator('w'));
 
     $("#wSection")
         .find('.row.body:first')
@@ -463,10 +476,10 @@ var deleteIconClickForExamType = (code) => {
         $("#formHeading").html("Delete ExamType");
         $("#tSection")
             .find('.row.body')
-            .find("input").prop("disabled", true);
+            .find("input,select").prop("disabled", true);
         $("#wSection")
             .find('.row.body')
-            .find("input").prop("disabled", true);
+            .find("input,select").prop("disabled", true);
         $("#examTypeTableDiv").hide();
         $("#examTypeFormDiv").show();
     };
@@ -499,6 +512,7 @@ var evenBinderForExamType = () => {
     });
 
     $("#btnSave").off().on("click", function () {
+        console.log("dd");
         saveForExamType();
     });
 

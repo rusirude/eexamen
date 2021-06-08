@@ -18,8 +18,8 @@ public class ExamTypeDTO extends CommonDTO{
 	private String examCategoryDescription;
 	private String questionCategoryCode;
 	private String questionCategoryDescription;
-	private Double tPassMark;
-	private Double wPassMark;
-	private List<ExamTypeQuestionModelDTO> tQuestions;
-	private List<ExamTypeQuestionModelDTO> wQuestions;
+	private Double qtPassMark;
+	private Double qwPassMark;
+	private List<ExamTypeQuestionModelDTO> qtQuestions;
+	private List<ExamTypeQuestionModelDTO> qwQuestions;
 }

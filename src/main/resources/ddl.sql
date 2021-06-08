@@ -481,7 +481,7 @@ CREATE TABLE `student_examination_question_answer` (
 CREATE TABLE `exam_type` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `code` VARCHAR(10) NOT NULL,
-  `description` LONGTEXT NOT NULL,
+  `description` VARCHAR(50) NOT NULL,
   `status` INT NOT NULL,
   `exam_category` VARCHAR(12) NOT NULL,
   `question_category` INT NOT NULL,

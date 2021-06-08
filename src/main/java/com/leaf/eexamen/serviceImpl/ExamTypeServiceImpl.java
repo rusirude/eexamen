@@ -60,8 +60,8 @@ public class ExamTypeServiceImpl implements ExamTypeService {
 				examTypeEntity.setStatusEntity(statusEntity);
 				examTypeEntity.setExamCategory(ExamCategoryEnum.getEnum(examTypeDTO.getExamCategoryCode()).getCode());
 				examTypeEntity.setQuestionCategoryEntity(questionCategoryEntity);
-				examTypeEntity.setTPassMark(examTypeDTO.getTPassMark());
-				examTypeEntity.setWPassMark(examTypeDTO.getWPassMark());
+				examTypeEntity.setTPassMark(examTypeDTO.getQtPassMark());
+				examTypeEntity.setWPassMark(examTypeDTO.getQwPassMark());
 
 
 				commonMethod.getPopulateEntityWhenInsert(examTypeEntity);
@@ -71,7 +71,7 @@ public class ExamTypeServiceImpl implements ExamTypeService {
 				final ExamTypeEntity finalExamTypeEntity = examTypeEntity;
 
 
-				Optional.ofNullable(examTypeDTO.getTQuestions()).orElse(Collections.emptyList())
+				Optional.ofNullable(examTypeDTO.getQtQuestions()).orElse(Collections.emptyList())
 						.forEach(typeQuestionModelDTO -> {
 
 							ExamTypeQuestionModelEntity examTypeQuestionModelEntity = new ExamTypeQuestionModelEntity();
@@ -80,7 +80,7 @@ public class ExamTypeServiceImpl implements ExamTypeService {
 							examTypeQuestionModelEntity.setStatusEntity(statusEntity);
 							examTypeQuestionModelEntity.setType(QuestionTypeEnum.THEORIM.getCode());
 							examTypeQuestionModelEntity.setGroup(typeQuestionModelDTO.getGroup());
-							examTypeQuestionModelEntity.setLabel(typeQuestionModelDTO.getLabel());
+							examTypeQuestionModelEntity.setLabel(!Optional.ofNullable(typeQuestionModelDTO.getLabel()).orElse("").isEmpty()?typeQuestionModelDTO.getLabel():null);
 							examTypeQuestionModelEntity.setNoQuestion(typeQuestionModelDTO.getNoQuestion());
 
 							commonMethod.getPopulateEntityWhenInsert(examTypeQuestionModelEntity);
@@ -90,7 +90,7 @@ public class ExamTypeServiceImpl implements ExamTypeService {
 
 						});
 
-				Optional.ofNullable(examTypeDTO.getWQuestions()).orElse(Collections.emptyList())
+				Optional.ofNullable(examTypeDTO.getQwQuestions()).orElse(Collections.emptyList())
 						.forEach(typeQuestionModelDTO -> {
 
 							ExamTypeQuestionModelEntity examTypeQuestionModelEntity = new ExamTypeQuestionModelEntity();
@@ -99,7 +99,7 @@ public class ExamTypeServiceImpl implements ExamTypeService {
 							examTypeQuestionModelEntity.setStatusEntity(statusEntity);
 							examTypeQuestionModelEntity.setType(QuestionTypeEnum.WETGEVING.getCode());
 							examTypeQuestionModelEntity.setGroup(typeQuestionModelDTO.getGroup());
-							examTypeQuestionModelEntity.setLabel(typeQuestionModelDTO.getLabel());
+							examTypeQuestionModelEntity.setLabel(!Optional.ofNullable(typeQuestionModelDTO.getLabel()).orElse("").isEmpty()?typeQuestionModelDTO.getLabel():null);
 							examTypeQuestionModelEntity.setNoQuestion(typeQuestionModelDTO.getNoQuestion());
 
 							commonMethod.getPopulateEntityWhenInsert(examTypeQuestionModelEntity);
@@ -142,8 +142,8 @@ public class ExamTypeServiceImpl implements ExamTypeService {
 			examTypeEntity.setStatusEntity(statusEntity);
 			examTypeEntity.setExamCategory(ExamCategoryEnum.getEnum(examTypeDTO.getExamCategoryCode()).getCode());
 			examTypeEntity.setQuestionCategoryEntity(questionCategoryEntity);
-			examTypeEntity.setTPassMark(examTypeDTO.getTPassMark());
-			examTypeEntity.setWPassMark(examTypeDTO.getWPassMark());
+			examTypeEntity.setTPassMark(examTypeDTO.getQtPassMark());
+			examTypeEntity.setWPassMark(examTypeDTO.getQwPassMark());
 
 			commonMethod.getPopulateEntityWhenUpdate(examTypeEntity);
 
@@ -151,7 +151,32 @@ public class ExamTypeServiceImpl implements ExamTypeService {
 
 
 			List<Long> removedQuestions = new ArrayList<>();
-			examTypeDTO.getTQuestions()
+//			examTypeDTO.getQtQuestions()
+//					.forEach(typeQuestionModelDTO -> {
+//						ExamTypeQuestionModelEntity examTypeQuestionModelEntity = Optional
+//								.ofNullable(examTypeQuestionModelDAO.findExamTypeQuestionModelEntity(Optional.ofNullable(typeQuestionModelDTO.getId()).orElse(0L)))
+//								.orElse(new ExamTypeQuestionModelEntity());
+//
+//						examTypeQuestionModelEntity.setExamTypeEntity(examTypeEntity);
+//						examTypeQuestionModelEntity.setType(QuestionTypeEnum.THEORIM.getCode());
+//						examTypeQuestionModelEntity.setGroup(typeQuestionModelDTO.getGroup());
+//						examTypeQuestionModelEntity.setLabel(typeQuestionModelDTO.getLabel());
+//						examTypeQuestionModelEntity.setNoQuestion(typeQuestionModelDTO.getNoQuestion());
+//						examTypeQuestionModelEntity.setStatusEntity(activeStatusEntity);
+//
+//						if(Objects.isNull(examTypeQuestionModelEntity.getId())){
+//							commonMethod.getPopulateEntityWhenInsert(examTypeQuestionModelEntity);
+//							examTypeQuestionModelDAO.saveExamTypeQuestionModelEntity(examTypeQuestionModelEntity);
+//						}
+//						else{
+//							commonMethod.getPopulateEntityWhenUpdate(examTypeQuestionModelEntity);
+//							examTypeQuestionModelDAO.updateExamTypeQuestionModelEntity(examTypeQuestionModelEntity);
+//						}
+//						removedQuestions.add(examTypeQuestionModelEntity.getId());
+//
+//					});
+
+			Optional.ofNullable(examTypeDTO.getQtQuestions()).orElse(Collections.emptyList())
 					.forEach(typeQuestionModelDTO -> {
 						ExamTypeQuestionModelEntity examTypeQuestionModelEntity = Optional
 								.ofNullable(examTypeQuestionModelDAO.findExamTypeQuestionModelEntity(Optional.ofNullable(typeQuestionModelDTO.getId()).orElse(0L)))
@@ -160,7 +185,7 @@ public class ExamTypeServiceImpl implements ExamTypeService {
 						examTypeQuestionModelEntity.setExamTypeEntity(examTypeEntity);
 						examTypeQuestionModelEntity.setType(QuestionTypeEnum.THEORIM.getCode());
 						examTypeQuestionModelEntity.setGroup(typeQuestionModelDTO.getGroup());
-						examTypeQuestionModelEntity.setLabel(typeQuestionModelDTO.getLabel());
+						examTypeQuestionModelEntity.setLabel(!Optional.ofNullable(typeQuestionModelDTO.getLabel()).orElse("").isEmpty()?typeQuestionModelDTO.getLabel():null);
 						examTypeQuestionModelEntity.setNoQuestion(typeQuestionModelDTO.getNoQuestion());
 						examTypeQuestionModelEntity.setStatusEntity(activeStatusEntity);
 
@@ -176,32 +201,7 @@ public class ExamTypeServiceImpl implements ExamTypeService {
 
 					});
 
-			Optional.ofNullable(examTypeDTO.getTQuestions()).orElse(Collections.emptyList())
-					.forEach(typeQuestionModelDTO -> {
-						ExamTypeQuestionModelEntity examTypeQuestionModelEntity = Optional
-								.ofNullable(examTypeQuestionModelDAO.findExamTypeQuestionModelEntity(Optional.ofNullable(typeQuestionModelDTO.getId()).orElse(0L)))
-								.orElse(new ExamTypeQuestionModelEntity());
-
-						examTypeQuestionModelEntity.setExamTypeEntity(examTypeEntity);
-						examTypeQuestionModelEntity.setType(QuestionTypeEnum.THEORIM.getCode());
-						examTypeQuestionModelEntity.setGroup(typeQuestionModelDTO.getGroup());
-						examTypeQuestionModelEntity.setLabel(typeQuestionModelDTO.getLabel());
-						examTypeQuestionModelEntity.setNoQuestion(typeQuestionModelDTO.getNoQuestion());
-						examTypeQuestionModelEntity.setStatusEntity(activeStatusEntity);
-
-						if(Objects.isNull(examTypeQuestionModelEntity.getId())){
-							commonMethod.getPopulateEntityWhenInsert(examTypeQuestionModelEntity);
-							examTypeQuestionModelDAO.saveExamTypeQuestionModelEntity(examTypeQuestionModelEntity);
-						}
-						else{
-							commonMethod.getPopulateEntityWhenUpdate(examTypeQuestionModelEntity);
-							examTypeQuestionModelDAO.updateExamTypeQuestionModelEntity(examTypeQuestionModelEntity);
-						}
-						removedQuestions.add(examTypeQuestionModelEntity.getId());
-
-					});
-
-			Optional.ofNullable(examTypeDTO.getWQuestions()).orElse(Collections.emptyList())
+			Optional.ofNullable(examTypeDTO.getQwQuestions()).orElse(Collections.emptyList())
 					.forEach(typeQuestionModelDTO -> {
 						ExamTypeQuestionModelEntity examTypeQuestionModelEntity = Optional
 								.ofNullable(examTypeQuestionModelDAO.findExamTypeQuestionModelEntity(Optional.ofNullable(typeQuestionModelDTO.getId()).orElse(0L)))
@@ -210,7 +210,7 @@ public class ExamTypeServiceImpl implements ExamTypeService {
 						examTypeQuestionModelEntity.setExamTypeEntity(examTypeEntity);
 						examTypeQuestionModelEntity.setType(QuestionTypeEnum.WETGEVING.getCode());
 						examTypeQuestionModelEntity.setGroup(typeQuestionModelDTO.getGroup());
-						examTypeQuestionModelEntity.setLabel(typeQuestionModelDTO.getLabel());
+						examTypeQuestionModelEntity.setLabel(!Optional.ofNullable(typeQuestionModelDTO.getLabel()).orElse("").isEmpty()?typeQuestionModelDTO.getLabel():null);
 						examTypeQuestionModelEntity.setNoQuestion(typeQuestionModelDTO.getNoQuestion());
 						examTypeQuestionModelEntity.setStatusEntity(activeStatusEntity);
 
@@ -301,8 +301,8 @@ public class ExamTypeServiceImpl implements ExamTypeService {
 				dto.setExamCategoryDescription(ExamCategoryEnum.getEnum(examTypeEntity.getExamCategory()).getDescription());
 				dto.setQuestionCategoryCode(examTypeEntity.getQuestionCategoryEntity().getCode());
 				dto.setQuestionCategoryDescription(examTypeEntity.getQuestionCategoryEntity().getDescription());
-				dto.setTPassMark(examTypeEntity.getTPassMark());
-				dto.setWPassMark(examTypeEntity.getWPassMark());
+				dto.setQtPassMark(examTypeEntity.getTPassMark());
+				dto.setQwPassMark(examTypeEntity.getWPassMark());
 				dto.setCreatedBy(examTypeEntity.getCreatedBy());
 				dto.setCreatedOn(examTypeEntity.getCreatedOn());
 				dto.setUpdatedBy(examTypeEntity.getUpdatedBy());
@@ -318,7 +318,7 @@ public class ExamTypeServiceImpl implements ExamTypeService {
 							examTypeQuestionModelDTO.setTypeCode(QuestionTypeEnum.THEORIM.getCode());
 							examTypeQuestionModelDTO.setTypeDescription(QuestionTypeEnum.THEORIM.getDescription());
 							examTypeQuestionModelDTO.setGroup(examTypeQuestionModelEntity.getGroup());
-							examTypeQuestionModelDTO.setLabel(examTypeQuestionModelEntity.getLabel());
+							examTypeQuestionModelDTO.setLabel(Optional.ofNullable(examTypeQuestionModelEntity.getLabel()).orElse(""));
 							examTypeQuestionModelDTO.setNoQuestion(examTypeQuestionModelEntity.getNoQuestion());
 							examTypeQuestionModelDTO.setStatusCode(examTypeQuestionModelEntity.getStatusEntity().getCode());
 							examTypeQuestionModelDTO.setStatusDescription(examTypeQuestionModelEntity.getStatusEntity().getDescription());
@@ -326,7 +326,7 @@ public class ExamTypeServiceImpl implements ExamTypeService {
 						})
 						.collect(Collectors.toList());
 
-				dto.setTQuestions(tExamTypeQuestionModelDTOs);
+				dto.setQtQuestions(tExamTypeQuestionModelDTOs);
 
 
 				List<ExamTypeQuestionModelDTO> wExamTypeQuestionModelDTOs = examTypeQuestionModelDAO.findAllExamTypeQuestionModelEntitiesByExamTypeAndQuestionType(examTypeEntity.getId(), QuestionTypeEnum.WETGEVING.getCode(),DefaultStatusEnum.ACTIVE.getCode())
@@ -337,7 +337,7 @@ public class ExamTypeServiceImpl implements ExamTypeService {
 							examTypeQuestionModelDTO.setTypeCode(QuestionTypeEnum.WETGEVING.getCode());
 							examTypeQuestionModelDTO.setTypeDescription(QuestionTypeEnum.WETGEVING.getDescription());
 							examTypeQuestionModelDTO.setGroup(examTypeQuestionModelEntity.getGroup());
-							examTypeQuestionModelDTO.setLabel(examTypeQuestionModelEntity.getLabel());
+							examTypeQuestionModelDTO.setLabel(Optional.ofNullable(examTypeQuestionModelEntity.getLabel()).orElse(""));
 							examTypeQuestionModelDTO.setNoQuestion(examTypeQuestionModelEntity.getNoQuestion());
 							examTypeQuestionModelDTO.setStatusCode(examTypeQuestionModelEntity.getStatusEntity().getCode());
 							examTypeQuestionModelDTO.setStatusDescription(examTypeQuestionModelEntity.getStatusEntity().getDescription());
@@ -345,7 +345,7 @@ public class ExamTypeServiceImpl implements ExamTypeService {
 						})
 						.collect(Collectors.toList());
 
-				dto.setWQuestions(wExamTypeQuestionModelDTOs);
+				dto.setQwQuestions(wExamTypeQuestionModelDTOs);
 
 
 
