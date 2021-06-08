@@ -36,7 +36,7 @@ var rowCreator = (type) => {
                             <span id="${type}_label_${rowCount}-error" class="error invalid-feedback"></span>
                         </div>
                         <div class="form-group col-sm-4">
-                            <input type="number" name="${type}_count_${rowCount}" class="form-control form-control-sm" id="${type}_count_${rowCount}" aria-describedby="${type}_count_${rowCount}-error" aria-invalid="false"/>
+                            <input onkeyup="calculateTotalExamType('${type}')" type="number" name="${type}_count_${rowCount}" class="form-control form-control-sm" id="${type}_count_${rowCount}" aria-describedby="${type}_count_${rowCount}-error" aria-invalid="false"/>
                             <span id="t_count_${rowCount}-error" class="error invalid-feedback"></span>
                         </div>
 						<div class="form-group col-sm-2">
@@ -50,6 +50,17 @@ var rowCreator = (type) => {
 					</div>`;
 };
 
+function calculateTotalExamType(type){
+    let total = 0;
+    for (let ele of $("#"+type+"Section").find('.row.body').find('input[type=number]')) {
+
+        total += parseInt($(ele).val() || 0);
+
+    }
+    $("#"+type+"_tcount").val(total);
+
+}
+
 function addRow(ele,type) {
     let subLink = $(ele).parent().parent();
     subLink.after(rowCreator(type));
@@ -60,6 +71,7 @@ function removeRow(ele,type) {
         .find('.row.body:first')
         .find('button:has(i.fa-minus)').remove();
     $(ele).parent().parent().remove();
+    calculateTotalExamType(type)
 }
 
 /*------------------------------------------- CRUD Functions ------------------*/
@@ -279,6 +291,8 @@ var populateFormForExamType = (data) => {
                 $("#tSection").append(row);
             }
         }
+        calculateTotalExamType('t');
+
         if ((data.qwQuestions || []).length) {
             wRowCount = 0;
             $("#wSection")
@@ -293,6 +307,8 @@ var populateFormForExamType = (data) => {
                 $("#wSection").append(row);
             }
         }
+        calculateTotalExamType('w');
+
 
 
     }
@@ -405,6 +421,9 @@ var clearDataForExamType = () => {
         .find('.row.body:first')
         .find('button:has(i.fa-minus)').remove();
 
+    calculateTotalExamType('t');
+
+
     wRowCount = 0;
     $("#wSection")
         .find('.row.body').remove();
@@ -415,6 +434,8 @@ var clearDataForExamType = () => {
     $("#wSection")
         .find('.row.body:first')
         .find('button:has(i.fa-minus)').remove();
+
+    calculateTotalExamType('w');
 
     InputsValidator.removeInlineValidation(code);
     InputsValidator.removeInlineValidation(description);
