@@ -630,6 +630,8 @@ public class StartExaminationServiceImpl implements StartExaminationService {
         parameters.put("tFinalMark", studentExaminationEntity.getTFinalMark().intValue());
         parameters.put("wFinalMark", studentExaminationEntity.getWFinalMark().intValue());
         parameters.put("isPass", Optional.ofNullable(studentExaminationEntity.getPass()).orElse(false) ? "Geslaagd" : "Niet geslaagd");
+        parameters.put("isTPass", Optional.ofNullable(studentExaminationEntity.getTFinalMark()).orElse(0.0)>studentExaminationEntity.getTPassMark() ? "Geslaagd" : "Niet geslaagd");
+        parameters.put("isWPass", Optional.ofNullable(studentExaminationEntity.getWFinalMark()).orElse(0.0)>studentExaminationEntity.getWPassMark() ? "Geslaagd" : "Niet geslaagd");
         parameters.put("name", studentExaminationEntity.getSysUserEntity().getTitleEntity().getDescription() + " " + studentExaminationEntity.getSysUserEntity().getName());
         parameters.put("email", studentExaminationEntity.getSysUserEntity().getUsername());
         parameters.put("location", studentExaminationEntity.getExaminationEntity().getLocation());

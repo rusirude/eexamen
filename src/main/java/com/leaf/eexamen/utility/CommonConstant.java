@@ -46,8 +46,8 @@ public class CommonConstant {
     public static final String SYSTEM_DATE_TIME_FORMAT = "MM/dd/yyyy hh:mm a";
     public static final String SYSTEM_DATE_TIME_2_FORMAT = "MM/dd/yyyy hh:mm a";
     public static final String SYSTEM_DATE_TIME_3_FORMAT = "MM/dd/yyyy HH:mm:ss";
-    //public static final String DATE_TIMEZONE_JACKSON = "Asia/Colombo";
-    public static final String DATE_TIMEZONE_JACKSON = "Europe/Brussels";
+    public static final String DATE_TIMEZONE_JACKSON = "Asia/Colombo";
+//    public static final String DATE_TIMEZONE_JACKSON = "Europe/Brussels";
 
     /**Report JRXML path*/
     public static final String REPORT_PATH = "/reports/";

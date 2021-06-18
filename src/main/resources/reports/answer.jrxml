@@ -7,6 +7,18 @@
 			<style forecolor="#008000"/>
 		</conditionalStyle>
 	</style>
+	<style name="tpassStyle" forecolor="#FF0000">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[new Boolean($P{isTPass} == "Geslaagd")]]></conditionExpression>
+			<style forecolor="#008000"/>
+		</conditionalStyle>
+	</style>
+	<style name="wpassStyle" forecolor="#FF0000">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[new Boolean($P{isWPass} == "Geslaagd")]]></conditionExpression>
+			<style forecolor="#008000"/>
+		</conditionalStyle>
+	</style>
 	<style name="resuleStyle" forecolor="#FF0000">
 		<conditionalStyle>
 			<conditionExpression><![CDATA[new Boolean($F{result} == "JUIST")]]></conditionExpression>
@@ -19,8 +31,11 @@
 	</style>
 	<parameter name="examination" class="java.lang.String"/>
 	<parameter name="category" class="java.lang.String"/>
-	<parameter name="finalMark" class="java.lang.Integer"/>
+	<parameter name="tFinalMark" class="java.lang.Integer"/>
+	<parameter name="wFinalMark" class="java.lang.Integer"/>
 	<parameter name="isPass" class="java.lang.String"/>
+	<parameter name="isTPass" class="java.lang.String"/>
+	<parameter name="isWPass" class="java.lang.String"/>
 	<parameter name="name" class="java.lang.String"/>
 	<parameter name="email" class="java.lang.String"/>
 	<parameter name="finalSummery" class="com.leaf.eexamen.dto.FinalResultDTO">
@@ -43,7 +58,7 @@
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="190" splitType="Stretch">
+		<band height="284" splitType="Stretch">
 			<textField>
 				<reportElement x="0" y="0" width="550" height="30" uuid="5224000c-378e-4627-94a2-4361e8dc96fe"/>
 				<textElement>
@@ -59,7 +74,7 @@
 				<textFieldExpression><![CDATA[$P{name}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement style="passStyle" x="404" y="113" width="130" height="30" uuid="34b02ba4-ffbb-4695-b5de-335d8f448970"/>
+				<reportElement style="passStyle" x="410" y="100" width="130" height="30" uuid="34b02ba4-ffbb-4695-b5de-335d8f448970"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Calibri" size="16"/>
 				</textElement>
@@ -73,11 +88,11 @@
 				<textFieldExpression><![CDATA[$P{examination}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement style="passStyle" x="404" y="73" width="130" height="40" uuid="89ae66dd-1ff4-4821-9720-1303ccb12eeb"/>
+				<reportElement style="tpassStyle" x="66" y="220" width="130" height="40" uuid="89ae66dd-1ff4-4821-9720-1303ccb12eeb"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Calibri" size="28"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{finalMark} + "%"]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{tFinalMark} + "%"]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="110" y="70" width="280" height="20" uuid="d5c6b67e-9f3a-4e41-a123-bbac59e4d372"/>
@@ -191,6 +206,27 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$P{date}]]></textFieldExpression>
 			</textField>
+			<textField>
+				<reportElement style="wpassStyle" x="350" y="220" width="130" height="40" uuid="6829f526-8ee1-4c93-9434-3eb9a2c93021"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="28"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{wFinalMark} + "%"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="tpassStyle" x="66" y="200" width="130" height="20" uuid="063046bc-92d6-47cb-848f-eff1065e4b39"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="12"/>
+				</textElement>
+				<text><![CDATA[THEORIM]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="" style="wpassStyle" x="350" y="200" width="130" height="20" uuid="6be6aab3-f52a-462e-b878-a0811ff496d4"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="12"/>
+				</textElement>
+				<text><![CDATA[WEI]]></text>
+			</staticText>
 		</band>
 	</title>
 	<columnHeader>
@@ -301,91 +337,133 @@
 		</band>
 	</detail>
 	<summary>
-		<band height="104" splitType="Stretch">
+		<band height="156" splitType="Stretch">
 			<staticText>
-				<reportElement x="150" y="36" width="10" height="20" uuid="77cdabc6-47b5-4b51-9366-2190b7717733"/>
+				<reportElement x="150" y="67" width="10" height="20" uuid="77cdabc6-47b5-4b51-9366-2190b7717733"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Calibri" size="12"/>
 				</textElement>
 				<text><![CDATA[:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="150" y="56" width="10" height="20" uuid="f265a291-fce6-460d-b978-9138bf248d83"/>
+				<reportElement x="150" y="87" width="10" height="20" uuid="f265a291-fce6-460d-b978-9138bf248d83"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Calibri" size="12"/>
 				</textElement>
 				<text><![CDATA[:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="150" y="16" width="10" height="20" uuid="60838e28-b381-466c-93e3-ab5c18e78cba"/>
+				<reportElement x="150" y="47" width="10" height="20" uuid="60838e28-b381-466c-93e3-ab5c18e78cba"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Calibri" size="12"/>
 				</textElement>
 				<text><![CDATA[:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="1" y="16" width="149" height="20" uuid="910c0179-b71d-4066-a249-f5656fe4f509"/>
+				<reportElement x="1" y="47" width="149" height="20" uuid="910c0179-b71d-4066-a249-f5656fe4f509"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Calibri" size="12"/>
 				</textElement>
 				<text><![CDATA[Vragen correct beantwoord]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="1" y="36" width="149" height="20" uuid="ebd0b9e4-7527-42d0-b6f3-f01627620535"/>
+				<reportElement x="1" y="67" width="149" height="20" uuid="ebd0b9e4-7527-42d0-b6f3-f01627620535"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Calibri" size="12"/>
 				</textElement>
 				<text><![CDATA[Vragen foutief beantwoord]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="1" y="56" width="149" height="20" uuid="ac5e60f8-4ad0-41f5-8f5c-84a9dcde2d2d"/>
+				<reportElement x="1" y="87" width="149" height="20" uuid="ac5e60f8-4ad0-41f5-8f5c-84a9dcde2d2d"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Calibri" size="12"/>
 				</textElement>
 				<text><![CDATA[Vragen niet beantwoord]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="160" y="16" width="100" height="20" uuid="42e1ac6a-6cf1-4e0f-afcf-87357bf5cbd2"/>
+				<reportElement x="169" y="47" width="100" height="20" uuid="42e1ac6a-6cf1-4e0f-afcf-87357bf5cbd2"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Calibri" size="12"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{finalSummery}.getCorrect()]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{finalSummery}.getTCorrect()]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="160" y="36" width="100" height="20" uuid="a59861ea-fb03-4e01-8bc3-5016f3a1a220"/>
+				<reportElement x="169" y="67" width="100" height="20" uuid="a59861ea-fb03-4e01-8bc3-5016f3a1a220"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Calibri" size="12"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{finalSummery}.getWrong()]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{finalSummery}.getTWrong()]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="160" y="56" width="100" height="20" uuid="634efa3e-7019-46ad-8eb8-d6b0282d1093"/>
+				<reportElement x="169" y="87" width="100" height="20" uuid="634efa3e-7019-46ad-8eb8-d6b0282d1093"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Calibri" size="12"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{finalSummery}.getNotAnswered()]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{finalSummery}.getTNotAnswered()]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="1" y="76" width="149" height="20" uuid="f158086e-d009-49ca-8383-9708ba55c756"/>
+				<reportElement x="1" y="107" width="149" height="20" uuid="f158086e-d009-49ca-8383-9708ba55c756"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Calibri" size="12"/>
 				</textElement>
 				<text><![CDATA[Totaal]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="150" y="76" width="10" height="20" uuid="0efe45f1-8e3f-4381-944b-9cc8c6340811"/>
+				<reportElement x="150" y="107" width="10" height="20" uuid="0efe45f1-8e3f-4381-944b-9cc8c6340811"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Calibri" size="12"/>
 				</textElement>
 				<text><![CDATA[:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="160" y="76" width="100" height="20" uuid="80b4f9e4-0d81-480f-8ef9-310c51302c8e"/>
+				<reportElement x="169" y="107" width="100" height="20" uuid="80b4f9e4-0d81-480f-8ef9-310c51302c8e"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Calibri" size="12"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{finalSummery}.getTotal()]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{finalSummery}.getTTotal()]]></textFieldExpression>
 			</textField>
+			<textField>
+				<reportElement x="350" y="47" width="100" height="20" uuid="79fbcd25-f248-499f-bfaf-72fba8ae7b56"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Calibri" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{finalSummery}.getWCorrect()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="350" y="107" width="100" height="20" uuid="0541c4a5-ee5c-4c6b-a548-5a4e8c45bb10"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Calibri" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{finalSummery}.getWTotal()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="350" y="67" width="100" height="20" uuid="4d06503a-dc2a-4b58-8e5c-1c8c30c584ee"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Calibri" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{finalSummery}.getWWrong()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="350" y="87" width="100" height="20" uuid="0884cc3c-9fb2-4fa1-bf47-3aa7f108101b"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Calibri" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{finalSummery}.getWNotAnswered()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="170" y="13" width="99" height="20" uuid="f54825d6-b7a3-4cc1-a44d-8c06c2eecc33"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" size="12"/>
+				</textElement>
+				<text><![CDATA[THEROPIM]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="350" y="13" width="99" height="20" uuid="cdb1bd39-eb18-4a90-9fd1-11a264c90a38"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" size="12"/>
+				</textElement>
+				<text><![CDATA[THEROPIM]]></text>
+			</staticText>
 		</band>
 	</summary>
 </jasperReport>
