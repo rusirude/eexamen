@@ -292,6 +292,9 @@ CREATE TABLE `question` (
   `code` VARCHAR(10) NOT NULL,
   `description` LONGTEXT NOT NULL,
   `status` INT NOT NULL,
+  `typ` VARCHAR(12) NOT NULL,
+  `grp` VARCHAR(2) NOT NULL,
+  `lab` VARCHAR(1) NULL,
   `created_by` VARCHAR(100) NOT NULL,
   `created_on` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_by` VARCHAR(100) NOT NULL,
@@ -350,13 +353,10 @@ CREATE TABLE `examination` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `code` VARCHAR(10) NOT NULL,
   `description` VARCHAR(50) NOT NULL,
-  `question_category` INT NOT NULL,
-  `no_question` INT NOT NULL DEFAULT 0,
+  `exam_type` INT NOT NULL,
   `duration` VARCHAR(10),
   `date_on` DATETIME NULL,
   `location` VARCHAR(200),
-  `type` VARCHAR(100),
-  `pass_mark` DECIMAL(5,2) DEFAULT 0,
   `status` INT NOT NULL,
   `effective_on` DATETIME NULL,
   `expier_on` DATETIME  NULL,
@@ -365,10 +365,10 @@ CREATE TABLE `examination` (
   `updated_by` VARCHAR(100) NOT NULL,
   `updated_on` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  INDEX `fk_examination_question_category_idx` (`status` ASC),
-  CONSTRAINT `fk_examination_question_category`
-    FOREIGN KEY (`question_category`)
-    REFERENCES `question_category` (`id`)
+  INDEX `fk_examination_exam_type_idx` (`exam_type` ASC),
+  CONSTRAINT `fk_examination_exam_type`
+    FOREIGN KEY (`exam_type`)
+    REFERENCES `exam_type` (`id`)
     ON DELETE RESTRICT
     ON UPDATE CASCADE,
   INDEX `fk_examination_status_idx` (`status` ASC),
@@ -408,9 +408,13 @@ CREATE TABLE `student_examination` (
   `status` INT NOT NULL,
   `start_on` DATETIME NULL,
   `end_on` DATETIME NULL,
-  `final_mark` DECIMAL(5,2) DEFAULT 0,
+  `t_final_mark` DECIMAL(5,2) DEFAULT 0,
+  `w_final_mark` DECIMAL(5,2) DEFAULT 0,
   `is_pass` BOOLEAN DEFAULT FALSE,
-  `pass_mark` DECIMAL(5,2) DEFAULT 0,
+  `t_pass_mark` DECIMAL(5,2) DEFAULT 0,
+  `w_pass_mark` DECIMAL(5,2) DEFAULT 0,
+  `t_count` INT DEFAULT 0,
+  `w_count` INT DEFAULT 0,
   `created_by` VARCHAR(100) NOT NULL,
   `created_on` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_by` VARCHAR(100) NOT NULL,
@@ -473,6 +477,60 @@ CREATE TABLE `student_examination_question_answer` (
     ON DELETE RESTRICT
     ON UPDATE CASCADE);
 
+
+CREATE TABLE `exam_type` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `code` VARCHAR(10) NOT NULL,
+  `description` VARCHAR(50) NOT NULL,
+  `status` INT NOT NULL,
+  `exam_category` VARCHAR(12) NOT NULL,
+  `question_category` INT NOT NULL,
+  `t_pass_mark` DECIMAL(5,2) DEFAULT 0,
+  `w_pass_mark` DECIMAL(5,2) DEFAULT 0,
+  `created_by` VARCHAR(100) NOT NULL,
+  `created_on` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_by` VARCHAR(100) NOT NULL,
+  `updated_on` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  INDEX `fk_exam_type_status_idx` (`status` ASC),
+  CONSTRAINT `fk_exam_type_status`
+    FOREIGN KEY (`status`)
+    REFERENCES `status` (`id`)
+    ON DELETE RESTRICT
+    ON UPDATE CASCADE,
+  INDEX `fk_exam_type_question_category_idx` (`status` ASC),
+  CONSTRAINT `fk_exam_type_question_category`
+    FOREIGN KEY (`question_category`)
+    REFERENCES `question_category` (`id`)
+    ON DELETE RESTRICT
+    ON UPDATE CASCADE);
+
+CREATE TABLE `exam_type_question_model` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `exam_type` INT NOT NULL,
+  `typ` VARCHAR(12) NOT NULL,
+  `grp` VARCHAR(2) NOT NULL,
+  `lab` VARCHAR(1) NULL,
+  `no_question` INT NOT NULL DEFAULT 0,
+  `status` INT NOT NULL,
+  `created_by` VARCHAR(100) NOT NULL,
+  `created_on` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_by` VARCHAR(100) NOT NULL,
+  `updated_on` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  INDEX `fk_exam_type_question_model_exam_type_idx` (`status` ASC),
+  CONSTRAINT `fk_exam_type_question_models_exam_type`
+    FOREIGN KEY (`exam_type`)
+    REFERENCES `exam_type` (`id`)
+    ON DELETE RESTRICT
+    ON UPDATE CASCADE,
+  INDEX `fk_exam_type_question_models_status_idx` (`status` ASC),
+  CONSTRAINT `fk_exam_type_question_models_status`
+    FOREIGN KEY (`status`)
+    REFERENCES `status` (`id`)
+    ON DELETE RESTRICT
+    ON UPDATE CASCADE);
+
     
 INSERT INTO `status_category` (`code`, `description`) VALUES ('DEFAULT', 'Default');
 INSERT INTO `status_category` (`code`,`description`) VALUES ('DELETE','Delete');
@@ -532,7 +590,8 @@ INSERT INTO `authority`(`code`,`description`,`auth_code`,`url`,`section`,`status
 ('STUD','Student','ROLE_STUD','/student/',4,1,'SYSTEM','SYSTEM'),
 ('STUEXAM','Examination','ROLE_STUEXAM','/studentExams/',4,1,'SYSTEM','SYSTEM'),
 ('STUEXAMADD','Student Exams','ROLE_STUEXAMADD','/studentExamination/',4,1,'SYSTEM','SYSTEM'),
-('EMAIL','Email Editor','ROLE_EMAIL','/email/',1,1,'SYSTEM','SYSTEM');
+('EMAIL','Email Editor','ROLE_EMAIL','/email/',1,1,'SYSTEM','SYSTEM'),
+('EXMTYP','Exam Type','ROLE_EXMTYP','/examType/',4,1,'SYSTEM','SYSTEM');
 
 
 INSERT INTO `sys_role` (`code`,`description`,`status`,`created_by`,`updated_by`) VALUES ('SYSTEM','System',1,'SYSTEM','SYSTEM');

@@ -11,7 +11,7 @@
                     <tr>
                         <th>Code</th>
                         <th>Description</th>
-                        <th>Category</th>
+                        <th>Exam Type</th>
                         <th>Status</th>
                         <th>Created By</th>
                         <th>Created On</th>
@@ -53,30 +53,18 @@
                 </div>
                 <div class="row">
                     <div class="form-group col-sm-6">
-                        <label for="noQuestion">No Of Questions<span style="color: red">*</span></label>
-                        <input type="number" name="noQuestion" class="form-control form-control-sm" id="noQuestion" aria-describedby="noQuestion-error" aria-invalid="false"/>
-                        <span id="noQuestion-error" class="error invalid-feedback"></span>
-                    </div>
-                    <div class="form-group col-sm-6">
-                        <label for="duration">Duration<span style="color: red">*</span></label>
-                        <input type="text" name="duration" class="form-control form-control-sm" id="duration" data-inputmask="'mask': '99:99'" data-mask="" inputmode="numeric" aria-describedby="duration-error" aria-invalid="false"/>
-                        <span id="duration-error" class="error invalid-feedback"></span>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="form-group col-sm-6">
-                        <label for="questionCategory">Question Category</label>
-                        <select class="form-control form-control-sm" id="questionCategory">
-
-                        </select>
-                        <span id="questionCategory-error" class="questionCategory invalid-feedback"></span>
-                    </div>
-                    <div class="form-group col-sm-6">
                         <label for="status">Status</label>
                         <select class="form-control form-control-sm" id="status">
 
                         </select>
                         <span id="status-error" class="error invalid-feedback"></span>
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <label for="status">Exam Type</label>
+                        <select class="form-control form-control-sm" id="examType">
+
+                        </select>
+                        <span id="examType-error" class="error invalid-feedback"></span>
                     </div>
                 </div>
                 <div class="row">
@@ -91,24 +79,18 @@
                         </div>
                     </div>
                     <div class="form-group col-sm-6">
+                        <label for="duration">Duration<span style="color: red">*</span></label>
+                        <input type="text" name="duration" class="form-control form-control-sm" id="duration" data-inputmask="'mask': '99:99'" data-mask="" inputmode="numeric" aria-describedby="duration-error" aria-invalid="false"/>
+                        <span id="duration-error" class="error invalid-feedback"></span>
+                    </div>
+                </div>
+                <div class="row">
+
+                    <div class="form-group col-sm-6">
                         <label for="location">Location<span style="color: red">*</span></label>
                         <input maxlength="200" type="text" name="location" class="form-control form-control-sm" id="location" aria-describedby="location-error" aria-invalid="false"/>
                         <span id="location-error" class="error invalid-feedback"></span>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="form-group col-sm-6">
-                        <label for="type">Type<span style="color: red">*</span></label>
-                        <input maxlength="100" type="text" name="type" class="form-control form-control-sm" id="type" aria-describedby="type-error" aria-invalid="false"/>
-                        <span id="type-error" class="error invalid-feedback"></span>
-                    </div>
-                    <div class="form-group col-sm-6">
-                        <label for="passMark">Pass Mark (%)<span style="color: red">*</span></label>
-                        <input type="number" name="passMark" class="form-control form-control-sm" id="passMark"  aria-describedby="passMark-error" aria-invalid="false"/>
-                        <span id="passMark-error" class="error invalid-feedback"></span>
-                    </div>
-                </div>
-                <div class="row">
                     <div class="form-group col-sm-6">
                         <label>Effective On</label>
                         <div class="input-group date" id="effectiveOnDiv" data-target-input="nearest">
@@ -119,6 +101,9 @@
                             <span id="effectiveOn-error" class="error invalid-feedback"></span>
                         </div>
                     </div>
+                </div>
+                <div class="row">
+
                     <div class="form-group col-sm-6">
                         <label>Expire On</label>
                         <div class="input-group date" id="expireOnDiv" data-target-input="nearest">

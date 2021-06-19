@@ -14,6 +14,9 @@ public class QuestionDTO extends CommonDTO{
 	private String description;
 	private String statusCode;
 	private String statusDescription;
+	private String type;
+	private String group;
+	private String label;
 	private List<QuestionCategoryDTO> questionCategories;
 	private List<QuestionAnswerDTO> questionAnswers;
 }

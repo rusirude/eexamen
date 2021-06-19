@@ -56,6 +56,9 @@ public class QuestionServiceImpl implements QuestionService {
 
 				questionEntity = new QuestionEntity();
 				questionEntity.setCode(questionDTO.getCode());
+				questionEntity.setType(questionDTO.getType());
+				questionEntity.setGroup(questionDTO.getGroup());
+				questionEntity.setLabel(!Optional.ofNullable(questionDTO.getLabel()).orElse("").isEmpty()?questionDTO.getLabel():null);
 				questionEntity.setDescription(questionDTO.getDescription());
 				questionEntity.setStatusEntity(statusEntity);
 
@@ -129,6 +132,9 @@ public class QuestionServiceImpl implements QuestionService {
 			QuestionEntity questionEntity = questionDAO.findQuestionEntityByCode(questionDTO.getCode());
 			questionEntity.setCode(questionDTO.getCode());
 			questionEntity.setDescription(questionDTO.getDescription());
+			questionEntity.setType(questionDTO.getType());
+			questionEntity.setGroup(questionDTO.getGroup());
+			questionEntity.setLabel(!Optional.ofNullable(questionDTO.getLabel()).orElse("").isEmpty()?questionDTO.getLabel():null);
 			questionEntity.setStatusEntity(statusEntity);
 
 			commonMethod.getPopulateEntityWhenUpdate(questionEntity);
@@ -254,6 +260,9 @@ public class QuestionServiceImpl implements QuestionService {
 				dto.setCode(questionEntity.getCode());
 				dto.setDescription(questionEntity.getDescription());
 				dto.setStatusCode(questionEntity.getStatusEntity().getCode());
+				dto.setType(questionEntity.getType());
+				dto.setGroup(questionEntity.getGroup());
+				dto.setLabel(questionEntity.getLabel());
 				dto.setStatusDescription(questionEntity.getStatusEntity().getDescription());
 				dto.setCreatedBy(questionEntity.getCreatedBy());
 				dto.setCreatedOn(questionEntity.getCreatedOn());

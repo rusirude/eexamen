@@ -17,7 +17,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 
 @Repository
@@ -134,27 +136,112 @@ public class QuestionDAOImpl implements QuestionDAO {
         return countryEntities;
 	}
 
+
 	@Override
-	public List<QuestionEntity> findAllQuestionEntitiesRandomly(long status, int limit, long category) {
-		String sql = "SELECT " +
+	public List<QuestionEntity> findAllQuestionEntitiesRandomly(long status, int limit, long category, String group, String label, List<Long> currentAvailableIds) {
+		if(Optional.of(label).orElse("").isEmpty()){
+			if(Optional.ofNullable(currentAvailableIds).orElse(Collections.emptyList()).isEmpty()){
+				String sql = "SELECT " +
 						"q.* " +
-					  "FROM " +
+						"FROM " +
 						"question_question_category qqc INNER JOIN " +
-					    "question q " +
-				        "on qqc.question = q.id " +
-				      "WHERE " +
-				        "qqc.question_category = :category AND " +
-				        "q.status = :status " +
-				      "ORDER BY " +
-				        "RAND() " +
-				      "LIMIT :limit";
-		List<QuestionEntity> result = entityManager.createNativeQuery(sql,QuestionEntity.class)
-				.setParameter("category",category)
-				.setParameter("status",status)
-				.setParameter("limit",limit)
-				.getResultList();
-		return result;
+						"question q " +
+						"on qqc.question = q.id " +
+						"WHERE " +
+						"qqc.question_category = :category AND " +
+						"q.status = :status AND " +
+						"q.grp = :grp AND " +
+						"q.lab IS NULL " +
+						"ORDER BY " +
+						"RAND() " +
+						"LIMIT :limit";
+				return entityManager.createNativeQuery(sql,QuestionEntity.class)
+						.setParameter("category", category)
+						.setParameter("status",status)
+						.setParameter("grp",group)
+						.setParameter("limit",limit)
+						.getResultList();
+			}
+			else{
+				String sql = "SELECT " +
+						"q.* " +
+						"FROM " +
+						"question_question_category qqc INNER JOIN " +
+						"question q " +
+						"ON qqc.question = q.id " +
+						"WHERE " +
+						"qqc.question_category = :category AND " +
+						"q.status = :status AND " +
+						"q.grp = :grp AND " +
+						"q.lab IS NULL AND " +
+						"q.id NOT IN(:ids) " +
+						"ORDER BY " +
+						"RAND() " +
+						"LIMIT :limit";
+				return entityManager.createNativeQuery(sql,QuestionEntity.class)
+						.setParameter("category", category)
+						.setParameter("status",status)
+						.setParameter("grp",group)
+						.setParameter("ids",currentAvailableIds)
+						.setParameter("limit",limit)
+						.getResultList();
+			}
+
+		}
+		else {
+			if(Optional.ofNullable(currentAvailableIds).orElse(Collections.emptyList()).isEmpty()){
+				String sql = "SELECT " +
+						"q.* " +
+						"FROM " +
+						"question_question_category qqc INNER JOIN " +
+						"question q " +
+						"on qqc.question = q.id " +
+						"WHERE " +
+						"qqc.question_category = :category AND " +
+						"q.status = :status AND " +
+						"q.grp = :grp AND " +
+						"q.lab = :lab " +
+						"ORDER BY " +
+						"RAND() " +
+						"LIMIT :limit";
+				return entityManager.createNativeQuery(sql,QuestionEntity.class)
+						.setParameter("category", category)
+						.setParameter("status",status)
+						.setParameter("grp",group)
+						.setParameter("lab",label)
+						.setParameter("limit",limit)
+						.getResultList();
+			}
+			else{
+				String sql = "SELECT " +
+						"q.* " +
+						"FROM " +
+						"question_question_category qqc INNER JOIN " +
+						"question q " +
+						"ON qqc.question = q.id " +
+						"WHERE " +
+						"qqc.question_category = :category AND " +
+						"q.status = :status AND " +
+						"q.grp = :grp AND " +
+						"q.lab = :lab  AND " +
+						"q.id NOT IN(:ids) " +
+						"ORDER BY " +
+						"RAND() " +
+						"LIMIT :limit";
+				return entityManager.createNativeQuery(sql,QuestionEntity.class)
+						.setParameter("category", category)
+						.setParameter("status",status)
+						.setParameter("grp",group)
+						.setParameter("lab",label)
+						.setParameter("ids",currentAvailableIds)
+						.setParameter("limit",limit)
+						.getResultList();
+			}
+		}
+
 	}
+
+
 
 	/**
 	 * {@inheritDoc}

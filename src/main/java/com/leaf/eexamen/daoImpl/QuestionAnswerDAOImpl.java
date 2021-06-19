@@ -131,6 +131,7 @@ public class QuestionAnswerDAOImpl implements QuestionAnswerDAO {
 		return qestionAnswerEntity;
 	}
 
+
 	@Override
 	public Long findMaxQuestionAnswerForQuestion(String status) {
 		String sql = "SELECT " +

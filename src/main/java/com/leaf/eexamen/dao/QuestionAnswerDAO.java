@@ -1,6 +1,7 @@
 package com.leaf.eexamen.dao;
 
 import com.leaf.eexamen.entity.QuestionAnswerEntity;
+import com.leaf.eexamen.entity.QuestionEntity;
 
 import java.util.List;
 
@@ -49,6 +50,7 @@ public interface QuestionAnswerDAO {
 
 
 	QuestionAnswerEntity findCorrectQuestionAnswerEntity(long question,String statusCode);
+
 
 	Long findMaxQuestionAnswerForQuestion(String status);
 

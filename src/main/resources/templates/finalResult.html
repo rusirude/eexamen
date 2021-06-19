@@ -14,15 +14,41 @@
                             <h5>Plaats : <span th:text="${data.getLocation()}"></span></h5>
                             <h5>Datum : <span th:text="${data.getDateOn()}"></span></h5>
                             <h5>Type examen : <span th:text="${data.getType()}"></span></h5>
-                            <h5>Aantal vragen : <span th:text="${data.getTotal()}"></span></h5>
-                            <h5>Percentage : <span th:text="${data.getFinalMark()+'%'}"></span></h5>
+                            <table style="width: 100%;border-collapse: collapse;border: 1px solid white">
+                                <thead>
+                                    <tr>
+                                        <th style="border: 1px solid white;text-align: center"></th>
+                                        <th style="border: 1px solid white;text-align: center">THEORIM</th>
+                                        <th style="border: 1px solid white;text-align: center">WETGEVING</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td style="border: 1px solid white;text-align: center">Aantal vragen</td>
+                                        <td style="border: 1px solid white;text-align: center" th:text="${data.getTTotal()}"></td>
+                                        <td style="border: 1px solid white;text-align: center" th:text="${data.getWTotal()}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border: 1px solid white;text-align: center">Percentage</td>
+                                        <td style="border: 1px solid white;text-align: center" th:text="${data.getTFinalMark()+'%'}"></td>
+                                        <td style="border: 1px solid white;text-align: center" th:text="${data.getWFinalMark()+'%'}"></td>
+                                    </tr>
+                                </tbody>
+
+                            </table>
+                            <!--<h5>Aantal vragen : <span th:text="${data.getTTotal()}"></span></h5>-->
+                            <!--<h5>Percentage : <span th:text="${data.getTFinalMark()+'%'}"></span></h5>-->
+                            <!--<h5>Aantal vragen : <span th:text="${data.getWTotal()}"></span></h5>-->
+                            <!--<h5>Percentage : <span th:text="${data.getWFinalMark()+'%'}"></span></h5>-->
+
                             <h4 th:style="${data.getPassed() ? 'color: green;' : 'color: red;'}" th:text="${data.getPass()}"></h4>
                         </div>
                         <div class="card-footer">
+                            <h4>THEORIM</h4>
                             <div class="row">
                                 <div class="col-sm-4 border-right" style="color: green">
                                     <div class="description-block">
-                                        <h5 class="description-header" th:text="${data.getCorrect()}"></h5>
+                                        <h5 class="description-header" th:text="${data.getTCorrect()}"></h5>
                                         <span class="description-text">Vragen correct beantwoord</span>
                                     </div>
                                     <!-- /.description-block -->
@@ -30,7 +56,7 @@
                                 <!-- /.col -->
                                 <div class="col-sm-4 border-right" style="color: red">
                                     <div class="description-block">
-                                        <h5 class="description-header" th:text="${data.getWrong()}"></h5>
+                                        <h5 class="description-header" th:text="${data.getTWrong()}"></h5>
                                         <span class="description-text">Vragen foutief beantwoord</span>
                                     </div>
                                     <!-- /.description-block -->
@@ -38,7 +64,34 @@
                                 <!-- /.col -->
                                 <div class="col-sm-4">
                                     <div class="description-block" style="color: black">
-                                        <h5 class="description-header" th:text="${data.getNotAnswered()}"></h5>
+                                        <h5 class="description-header" th:text="${data.getTNotAnswered()}"></h5>
+                                        <span class="description-text">Vragen niet beantwoord</span>
+                                    </div>
+                                    <!-- /.description-block -->
+                                </div>
+                                <!-- /.col -->
+                            </div>
+                            <h4>WETGEVING</h4>
+                            <div class="row">
+                                <div class="col-sm-4 border-right" style="color: green">
+                                    <div class="description-block">
+                                        <h5 class="description-header" th:text="${data.getWCorrect()}"></h5>
+                                        <span class="description-text">Vragen correct beantwoord</span>
+                                    </div>
+                                    <!-- /.description-block -->
+                                </div>
+                                <!-- /.col -->
+                                <div class="col-sm-4 border-right" style="color: red">
+                                    <div class="description-block">
+                                        <h5 class="description-header" th:text="${data.getWWrong()}"></h5>
+                                        <span class="description-text">Vragen foutief beantwoord</span>
+                                    </div>
+                                    <!-- /.description-block -->
+                                </div>
+                                <!-- /.col -->
+                                <div class="col-sm-4">
+                                    <div class="description-block" style="color: black">
+                                        <h5 class="description-header" th:text="${data.getWNotAnswered()}"></h5>
                                         <span class="description-text">Vragen niet beantwoord</span>
                                     </div>
                                     <!-- /.description-block -->

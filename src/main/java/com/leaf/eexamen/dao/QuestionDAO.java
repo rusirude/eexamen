@@ -61,15 +61,17 @@ public interface QuestionDAO {
     List<QuestionEntity> findAllQuestionEntities(String statusCode);
 
 
-	/**
-	 * select - *
-	 * From - Question Random
-	 * where - STATUS = statusCode
-	 *
-	 * Find Question Entities By Status Code and Question Category
-	 * @return {@link List}
-	 */
-	List<QuestionEntity> findAllQuestionEntitiesRandomly(long status, int limit, long category);
+    /**
+     * select - *
+     * From - Question Random
+     * where - STATUS = statusCode
+     *
+     * Find Question Entities By Status Code and Question Category
+     * @return {@link List}
+     */
+
+    List<QuestionEntity> findAllQuestionEntitiesRandomly(long status, int limit, long category, String group, String label, List<Long> currentAvailableIds);
+
     /**
      * Getting Data For  Grid 
      * @param dataTableRequestDTO

@@ -9,8 +9,8 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Entity
-@Table(name = "question")
-public class QuestionEntity extends CommonEntity {
+@Table(name = "exam_type")
+public class ExamTypeEntity extends CommonEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,10 +22,13 @@ public class QuestionEntity extends CommonEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "status", nullable = false)
     private StatusEntity statusEntity;
-    @Column(name = "typ", length = 12, nullable = false)
-    private String type;
-    @Column(name = "grp", length = 2, nullable = false)
-    private String group;
-    @Column(name = "lab", length = 1)
-    private String label;
+    @Column(name = "exam_category", length = 12, nullable = false)
+    private String examCategory;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "question_category", nullable = false)
+    private QuestionCategoryEntity questionCategoryEntity;
+    @Column(name = "t_pass_mark")
+    private Double tPassMark;
+    @Column(name = "w_pass_mark")
+    private Double wPassMark;
 }

@@ -1,13 +1,16 @@
 package com.leaf.eexamen.serviceImpl;
 
-import com.leaf.eexamen.dao.*;
+import com.leaf.eexamen.dao.ExamTypeDAO;
+import com.leaf.eexamen.dao.ExaminationDAO;
+import com.leaf.eexamen.dao.StatusCategoryDAO;
+import com.leaf.eexamen.dao.StatusDAO;
 import com.leaf.eexamen.dto.ExaminationDTO;
 import com.leaf.eexamen.dto.common.DataTableRequestDTO;
 import com.leaf.eexamen.dto.common.DataTableResponseDTO;
 import com.leaf.eexamen.dto.common.DropDownDTO;
 import com.leaf.eexamen.dto.common.ResponseDTO;
+import com.leaf.eexamen.entity.ExamTypeEntity;
 import com.leaf.eexamen.entity.ExaminationEntity;
-import com.leaf.eexamen.entity.QuestionCategoryEntity;
 import com.leaf.eexamen.entity.StatusEntity;
 import com.leaf.eexamen.enums.DefaultStatusEnum;
 import com.leaf.eexamen.enums.DeleteStatusEnum;
@@ -22,7 +25,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -34,9 +36,8 @@ import java.util.stream.Collectors;
 public class ExaminationImpl implements ExaminationService {
 
 	private ExaminationDAO examinationDAO;
+	private ExamTypeDAO examTypeDAO;
 	private StatusDAO statusDAO;
-	private QuestionCategoryDAO questionCategoryDAO;
-	private QuestionQuestionCategoryDAO questionQuestionCategoryDAO;
 	private StatusCategoryDAO statusCategoryDAO;
 
 	private CommonMethod commonMethod;
@@ -57,18 +58,15 @@ public class ExaminationImpl implements ExaminationService {
 			examinationEntity = examinationDAO.findExaminationEntityByCode(examinationDTO.getCode());
 			if (examinationEntity == null || DeleteStatusEnum.DELETE.getCode().equals(examinationEntity.getStatusEntity().getCode())) {
 				StatusEntity statusEntity = statusDAO.findStatusEntityByCode(examinationDTO.getStatusCode());
-				QuestionCategoryEntity questionCategoryEntity = questionCategoryDAO.findQuestionCategoryEntityByCode(examinationDTO.getQuestionCategoryCode());
+				ExamTypeEntity examTypeEntity = examTypeDAO.findExamTypeEntityByCode(examinationDTO.getExamTypeCode());
 
 				examinationEntity = new ExaminationEntity();
 				examinationEntity.setCode(examinationDTO.getCode());
 				examinationEntity.setDescription(examinationDTO.getDescription());
-				examinationEntity.setQuestionCategoryEntity(questionCategoryEntity);
+				examinationEntity.setExamTypeEntity(examTypeEntity);
 				examinationEntity.setStatusEntity(statusEntity);
-				examinationEntity.setNoQuestion(examinationDTO.getNoQuestion());
 				examinationEntity.setDateOn(commonMethod.stringToDateTime(examinationDTO.getDateOn()));
 				examinationEntity.setLocation(examinationDTO.getLocation());
-				examinationEntity.setType(examinationDTO.getType());
-				examinationEntity.setPassMark(examinationDTO.getPassMark());
 				examinationEntity.setDuration(examinationDTO.getDuration());
 				examinationEntity.setEffectiveOn(commonMethod.stringToDateTime(examinationDTO.getEffectiveOn()));
 				examinationEntity.setExpireOn(commonMethod.stringToDateTime(examinationDTO.getExpireOn()));
@@ -98,17 +96,14 @@ public class ExaminationImpl implements ExaminationService {
 		String description = "Examination Update Failed";
 		try {
 			StatusEntity statusEntity = statusDAO.findStatusEntityByCode(examinationDTO.getStatusCode());
-			QuestionCategoryEntity questionCategoryEntity = questionCategoryDAO.findQuestionCategoryEntityByCode(examinationDTO.getQuestionCategoryCode());
+			ExamTypeEntity examTypeEntity = examTypeDAO.findExamTypeEntityByCode(examinationDTO.getExamTypeCode());
 
 			ExaminationEntity examinationEntity = examinationDAO.findExaminationEntityByCode(examinationDTO.getCode());
 			examinationEntity.setCode(examinationDTO.getCode());
 			examinationEntity.setDescription(examinationDTO.getDescription());
-			examinationEntity.setQuestionCategoryEntity(questionCategoryEntity);
-			examinationEntity.setNoQuestion(examinationDTO.getNoQuestion());
+			examinationEntity.setExamTypeEntity(examTypeEntity);
 			examinationEntity.setDateOn(commonMethod.stringToDateTime(examinationDTO.getDateOn()));
 			examinationEntity.setLocation(examinationDTO.getLocation());
-			examinationEntity.setType(examinationDTO.getType());
-			examinationEntity.setPassMark(examinationDTO.getPassMark());
 			examinationEntity.setDuration(examinationDTO.getDuration());
 			examinationEntity.setStatusEntity(statusEntity);
 			examinationEntity.setEffectiveOn(commonMethod.stringToDateTime(examinationDTO.getEffectiveOn()));
@@ -173,13 +168,10 @@ public class ExaminationImpl implements ExaminationService {
 				dto.setDescription(examinationEntity.getDescription());
 				dto.setStatusCode(examinationEntity.getStatusEntity().getCode());
 				dto.setStatusDescription(examinationEntity.getStatusEntity().getDescription());
-				dto.setQuestionCategoryCode(examinationEntity.getQuestionCategoryEntity().getCode());
-				dto.setQuestionCategoryDescription(examinationEntity.getQuestionCategoryEntity().getDescription());
-				dto.setNoQuestion(examinationEntity.getNoQuestion());
+				dto.setExamTypeCode(examinationEntity.getExamTypeEntity().getCode());
+				dto.setExamTypeDescription(examinationEntity.getExamTypeEntity().getDescription());
 				dto.setDateOn(commonMethod.dateTimeToString(examinationEntity.getDateOn()));
 				dto.setLocation(examinationEntity.getLocation());
-				dto.setType(examinationEntity.getType());
-				dto.setPassMark(examinationEntity.getPassMark());
 				dto.setDuration(examinationEntity.getDuration());
 				dto.setEffectiveOn(commonMethod.dateTimeToString(examinationEntity.getEffectiveOn()));
 				dto.setExpireOn(commonMethod.dateTimeToString(examinationEntity.getExpireOn()));
@@ -213,16 +205,13 @@ public class ExaminationImpl implements ExaminationService {
 					.map(s -> new DropDownDTO<>(s.getCode(), s.getDescription()))
 					.collect(Collectors.toList());
 
-			List<?> questionCategory = questionCategoryDAO.findAllQuestionCategoryEntities(DefaultStatusEnum.ACTIVE.getCode())
+			List<?> examType = examTypeDAO.findAllExamTypeEntities(DefaultStatusEnum.ACTIVE.getCode())
 					.stream()
-					.map(s -> {
-						Long count = questionQuestionCategoryDAO.getQuestionEntityCountByQuestionCategoryAndStatus(s.getCode(),DefaultStatusEnum.ACTIVE.getCode());
-						return new DropDownDTO<>(s.getCode(), s.getDescription(),count);
-					})
+					.map(s -> new DropDownDTO<>(s.getCode(), s.getDescription()))
 					.collect(Collectors.toList());
 
 			map.put("status", status);
-			map.put("questionCategory", questionCategory);
+			map.put("examType", examType);
 
 			code = ResponseCodeEnum.SUCCESS.getCode();
 		} catch (Exception e) {
@@ -244,8 +233,8 @@ public class ExaminationImpl implements ExaminationService {
 						dto.setCode(entity.getCode());
 						dto.setDescription(entity.getDescription());
 						dto.setStatusDescription(entity.getStatusEntity().getDescription());
-						dto.setQuestionCategoryCode(entity.getQuestionCategoryEntity().getDescription());
-						dto.setQuestionCategoryDescription(entity.getQuestionCategoryEntity().getDescription());
+						dto.setExamTypeCode(entity.getExamTypeEntity().getDescription());
+						dto.setExamTypeDescription(entity.getExamTypeEntity().getDescription());
 						dto.setEffectiveOn(commonMethod.dateTimeToString(entity.getEffectiveOn()));
 						dto.setExpireOn(commonMethod.dateTimeToString(entity.getExpireOn()));
 						dto.setCreatedBy(entity.getCreatedBy());

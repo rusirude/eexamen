@@ -1,0 +1,229 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <property name="now" value="now()" dbms="mysql"/>
+    <property name="now" value="now()" dbms="postgresql"/>
+    <property name="now" value="now()" dbms="h2"/>
+
+    <property name="dateType" value="DATETIME" dbms="mysql"/>
+    <property name="dateType" value="TIMESTAMP" dbms="postgresql"/>
+    <property name="dateType" value="TIMESTAMP" dbms="h2"/>
+
+    <property name="jsonType" value="JSON" dbms="mysql"/>
+    <property name="jsonType" value="JSON" dbms="postgresql"/>
+    <property name="jsonType" value="LONGTEXT" dbms="h2"/>
+
+    <changeSet id="R1" author="rusiru">
+        <createTable tableName="status_category">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="code" type="varchar(10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="R2" author="rusiru">
+        <createTable tableName="status">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="code" type="varchar(10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status_category" type="int">
+                <constraints nullable="false"
+                             foreignKeyName="fk_status_status_category"
+                             referencedTableName="status_category"
+                             referencedColumnNames="id"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="R3" author="rusiru">
+        <createIndex tableName="status" indexName="fk_status_status_category_idx">
+            <column descending="false" name="status_category"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="R4" author="rusiru">
+        <createTable tableName="sys_role">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="code" type="varchar(10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="int">
+                <constraints nullable="false"
+                             foreignKeyName="fk_sys_role_status"
+                             referencedTableName="status"
+                             referencedColumnNames="id"/>
+            </column>
+            <column name="created_by" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_on" type="${dateType}" defaultValue="${now}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_by" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_on" type="${dateType}" defaultValue="${now}">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="R5" author="rusiru">
+        <createIndex tableName="sys_role" indexName="fk_sys_role_status_idx">
+            <column descending="false" name="status"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="R6" author="rusiru">
+        <createTable tableName="title">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="code" type="varchar(10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="int">
+                <constraints nullable="false"
+                             foreignKeyName="fk_title_status"
+                             referencedTableName="status"
+                             referencedColumnNames="id"/>
+            </column>
+            <column name="created_by" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_on" type="${dateType}" defaultValue="${now}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_by" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_on" type="${dateType}" defaultValue="${now}">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="R7" author="rusiru">
+        <createIndex tableName="title" indexName="fk_title_status_idx">
+            <column descending="false" name="status"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="R8" author="rusiru">
+        <createTable tableName="sys_user">
+            <column name="username" type="varchar(100)">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="password" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="title" type="int">
+                <constraints nullable="false"
+                             foreignKeyName="fk_sys_user_title"
+                             referencedTableName="title"
+                             referencedColumnNames="id"/>
+            </column>
+            <column name="name" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="int">
+                <constraints nullable="false"
+                             foreignKeyName="fk_sys_user_status"
+                             referencedTableName="status"
+                             referencedColumnNames="id"/>
+            </column>
+            <column name="student" type="boolean">
+                <constraints nullable="false" defaultValue="false"/>
+            </column>
+            <column name="reset_password" type="tinyint">
+                <constraints nullable="false" defaultValue="0"/>
+            </column>
+            <column name="created_by" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_on" type="${dateType}" defaultValue="${now}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_by" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_on" type="${dateType}" defaultValue="${now}">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="R9" author="rusiru">
+        <createIndex tableName="sys_user" indexName="fx_sys_user_title_idx">
+            <column descending="false" name="title"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="R10" author="rusiru">
+        <createIndex tableName="sys_user" indexName="fk_sys_user_status_idx">
+            <column descending="false" name="status"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="R11" author="rusiru">
+        <createTable tableName="section">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="code" type="varchar(10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="int">
+                <constraints nullable="false"
+                             foreignKeyName="fk_section_status"
+                             referencedTableName="status"
+                             referencedColumnNames="id"/>
+            </column>
+            <column name="created_by" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_on" type="${dateType}" defaultValue="${now}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_by" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_on" type="${dateType}" defaultValue="${now}">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="R12" author="rusiru">
+        <createIndex tableName="section" indexName="fk_section_status_idx">
+            <column descending="false" name="status"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>
