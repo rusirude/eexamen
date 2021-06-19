@@ -225,7 +225,7 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Calibri" size="12"/>
 				</textElement>
-				<text><![CDATA[WEI]]></text>
+				<text><![CDATA[WETGEVING]]></text>
 			</staticText>
 		</band>
 	</title>
@@ -455,14 +455,14 @@
 				<textElement verticalAlignment="Middle">
 					<font fontName="Calibri" size="12"/>
 				</textElement>
-				<text><![CDATA[THEROPIM]]></text>
+				<text><![CDATA[THEORIM]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="350" y="13" width="99" height="20" uuid="cdb1bd39-eb18-4a90-9fd1-11a264c90a38"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Calibri" size="12"/>
 				</textElement>
-				<text><![CDATA[THEROPIM]]></text>
+				<text><![CDATA[WETGEVING]]></text>
 			</staticText>
 		</band>
 	</summary>
