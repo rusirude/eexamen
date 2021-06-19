@@ -408,13 +408,13 @@ CREATE TABLE `student_examination` (
   `status` INT NOT NULL,
   `start_on` DATETIME NULL,
   `end_on` DATETIME NULL,
-  `t_final_mark` DECIMAL(5,2) DEFAULT 0,
-  `w_final_mark` DECIMAL(5,2) DEFAULT 0,
+  `t_final_mark` DECIMAL(5,2) DEFAULT NULL,
+  `w_final_mark` DECIMAL(5,2) DEFAULT NULL,
   `is_pass` BOOLEAN DEFAULT FALSE,
   `t_pass_mark` DECIMAL(5,2) DEFAULT 0,
   `w_pass_mark` DECIMAL(5,2) DEFAULT 0,
-  `t_count` INT DEFAULT 0,
-  `w_count` INT DEFAULT 0,
+  `t_count` INT DEFAULT NULL,
+  `w_count` INT DEFAULT NULL,
   `created_by` VARCHAR(100) NOT NULL,
   `created_on` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_by` VARCHAR(100) NOT NULL,
@@ -568,9 +568,9 @@ INSERT INTO `master_data`(`code`,`value`,`created_by`,`updated_by`) VALUES
 
 
 INSERT INTO `email_body`(`code`,`subject`,`content`,`enable`,`created_by`,`updated_by`) VALUES
-('EFR',null,null,1,'SYSTEM','SYSTEM'),
-('EFSR',null,null,1,'SYSTEM','SYSTEM'),
-('EFPR',null,null,1,'SYSTEM','SYSTEM');
+('EFR',null,null,0,'SYSTEM','SYSTEM'),
+('EFSR',null,null,0,'SYSTEM','SYSTEM'),
+('EFPR',null,null,0,'SYSTEM','SYSTEM');
 
 INSERT INTO `authority`(`code`,`description`,`auth_code`,`url`,`section`,`status`,`created_by`,`updated_by`)  VALUES
 ('USER','System User','ROLE_USER','/sysUser/',1,1,'SYSTEM','SYSTEM'),
