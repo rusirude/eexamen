@@ -52,7 +52,7 @@ public class ExamTypeServiceImpl implements ExamTypeService {
 			examTypeEntity = examTypeDAO.findExamTypeEntityByCode(examTypeDTO.getCode());
 			if (examTypeEntity == null  || DeleteStatusEnum.DELETE.getCode().equals(examTypeEntity.getStatusEntity().getCode())) {
 				final StatusEntity statusEntity = statusDAO.findStatusEntityByCode(examTypeDTO.getStatusCode());
-				QuestionCategoryEntity questionCategoryEntity = questionCategoryDAO.findQuestionCategoryEntityByCode(examTypeDTO.getCode());
+				QuestionCategoryEntity questionCategoryEntity = questionCategoryDAO.findQuestionCategoryEntityByCode(examTypeDTO.getQuestionCategoryCode());
 
 				examTypeEntity = new ExamTypeEntity();
 				examTypeEntity.setCode(examTypeDTO.getCode());
@@ -133,7 +133,7 @@ public class ExamTypeServiceImpl implements ExamTypeService {
 			StatusEntity statusEntity = statusDAO.findStatusEntityByCode(examTypeDTO.getStatusCode());
 			StatusEntity activeStatusEntity = statusDAO.findStatusEntityByCode(DefaultStatusEnum.ACTIVE.getCode());
 			StatusEntity deleteStatusEntity = statusDAO.findStatusEntityByCode(DeleteStatusEnum.DELETE.getCode());
-			QuestionCategoryEntity questionCategoryEntity = questionCategoryDAO.findQuestionCategoryEntityByCode(examTypeDTO.getCode());
+			QuestionCategoryEntity questionCategoryEntity = questionCategoryDAO.findQuestionCategoryEntityByCode(examTypeDTO.getQuestionCategoryCode());
 
 
 			ExamTypeEntity examTypeEntity = examTypeDAO.findExamTypeEntityByCode(examTypeDTO.getCode());
