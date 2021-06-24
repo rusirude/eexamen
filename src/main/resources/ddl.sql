@@ -348,6 +348,32 @@ CREATE TABLE `question_answer` (
     ON DELETE RESTRICT
     ON UPDATE CASCADE);
 
+CREATE TABLE `exam_type` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `code` VARCHAR(10) NOT NULL,
+  `description` VARCHAR(50) NOT NULL,
+  `status` INT NOT NULL,
+  `exam_category` VARCHAR(12) NOT NULL,
+  `question_category` INT NOT NULL,
+  `t_pass_mark` DECIMAL(5,2) DEFAULT 0,
+  `w_pass_mark` DECIMAL(5,2) DEFAULT 0,
+  `created_by` VARCHAR(100) NOT NULL,
+  `created_on` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_by` VARCHAR(100) NOT NULL,
+  `updated_on` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  INDEX `fk_exam_type_status_idx` (`status` ASC),
+  CONSTRAINT `fk_exam_type_status`
+    FOREIGN KEY (`status`)
+    REFERENCES `status` (`id`)
+    ON DELETE RESTRICT
+    ON UPDATE CASCADE,
+  INDEX `fk_exam_type_question_category_idx` (`status` ASC),
+  CONSTRAINT `fk_exam_type_question_category`
+    FOREIGN KEY (`question_category`)
+    REFERENCES `question_category` (`id`)
+    ON DELETE RESTRICT
+    ON UPDATE CASCADE);
 
 CREATE TABLE `examination` (
   `id` INT NOT NULL AUTO_INCREMENT,
@@ -477,33 +503,6 @@ CREATE TABLE `student_examination_question_answer` (
     ON DELETE RESTRICT
     ON UPDATE CASCADE);
 
-
-CREATE TABLE `exam_type` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `code` VARCHAR(10) NOT NULL,
-  `description` VARCHAR(50) NOT NULL,
-  `status` INT NOT NULL,
-  `exam_category` VARCHAR(12) NOT NULL,
-  `question_category` INT NOT NULL,
-  `t_pass_mark` DECIMAL(5,2) DEFAULT 0,
-  `w_pass_mark` DECIMAL(5,2) DEFAULT 0,
-  `created_by` VARCHAR(100) NOT NULL,
-  `created_on` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_by` VARCHAR(100) NOT NULL,
-  `updated_on` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  INDEX `fk_exam_type_status_idx` (`status` ASC),
-  CONSTRAINT `fk_exam_type_status`
-    FOREIGN KEY (`status`)
-    REFERENCES `status` (`id`)
-    ON DELETE RESTRICT
-    ON UPDATE CASCADE,
-  INDEX `fk_exam_type_question_category_idx` (`status` ASC),
-  CONSTRAINT `fk_exam_type_question_category`
-    FOREIGN KEY (`question_category`)
-    REFERENCES `question_category` (`id`)
-    ON DELETE RESTRICT
-    ON UPDATE CASCADE);
 
 CREATE TABLE `exam_type_question_model` (
   `id` INT NOT NULL AUTO_INCREMENT,

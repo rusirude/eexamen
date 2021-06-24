@@ -8,10 +8,8 @@ import com.leaf.eexamen.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.HashMap;
@@ -75,5 +73,14 @@ public class QuestionController {
 	@ResponseBody
 	public ResponseDTO<QuestionDTO> loadQuestionByCode(@RequestBody QuestionDTO questionDTO) {
 		return questionService.findQuestion(questionDTO);
+	}
+
+	@PreAuthorize("hasRole('ROLE_QUS')")
+	@RequestMapping(path = "/upload", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseDTO<?> uploadFile(@RequestParam("file") MultipartFile file) {
+
+		return questionService.uploadExcel(file);
+
 	}
 }

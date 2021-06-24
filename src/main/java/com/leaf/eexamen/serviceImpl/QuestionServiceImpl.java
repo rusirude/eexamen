@@ -9,18 +9,18 @@ import com.leaf.eexamen.dto.common.DataTableResponseDTO;
 import com.leaf.eexamen.dto.common.DropDownDTO;
 import com.leaf.eexamen.dto.common.ResponseDTO;
 import com.leaf.eexamen.entity.*;
-import com.leaf.eexamen.enums.DefaultStatusEnum;
-import com.leaf.eexamen.enums.DeleteStatusEnum;
-import com.leaf.eexamen.enums.ResponseCodeEnum;
-import com.leaf.eexamen.enums.StatusCategoryEnum;
+import com.leaf.eexamen.enums.*;
 import com.leaf.eexamen.service.QuestionService;
 import com.leaf.eexamen.utility.CommonConstant;
 import com.leaf.eexamen.utility.CommonMethod;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -365,6 +365,112 @@ public class QuestionServiceImpl implements QuestionService {
 		}
 
 		return responseDTO;
+	}
+
+	@Override
+	@Transactional
+	public ResponseDTO<?> uploadExcel(MultipartFile file) {
+		String code = ResponseCodeEnum.FAILED.getCode();
+		String description = "Upload Failed";
+		try {
+
+
+
+
+			Workbook workbook = new HSSFWorkbook(file.getInputStream());
+
+			Sheet sheet = workbook.getSheet("sheet1");
+			Iterator<Row> rows = sheet.iterator();
+
+			int rowNumber = 0;
+			while (rows.hasNext() && rowNumber< 478) {
+				Row currentRow = rows.next();
+
+				// skip header
+				if (rowNumber == 0) {
+					rowNumber++;
+					continue;
+				}
+
+				Iterator<Cell> cellsInRow = currentRow.iterator();
+
+				QuestionDTO question = new QuestionDTO();
+				List<QuestionAnswerDTO> questionAnswerDTOs = new ArrayList<>();
+				List<QuestionCategoryDTO> questionCategories  = new ArrayList<>();
+				int position = 1;
+				int cellIdx = 0;
+				while (cellsInRow.hasNext() && cellIdx <21) {
+					Cell currentCell = cellsInRow.next();
+					if(cellIdx == 0){
+						question.setCode("Q"+rowNumber);
+						question.setStatusCode(DefaultStatusEnum.ACTIVE.getCode());
+					}
+					else if(cellIdx==1)
+						question.setDescription(currentCell.getStringCellValue());
+					else if(1 < cellIdx && cellIdx < 6){
+						currentCell.setCellType(CellType.STRING);
+						QuestionAnswerDTO questionAnswerDTO = new QuestionAnswerDTO();
+						questionAnswerDTO.setPosition(position++);
+						if(CellType.STRING.equals(currentCell.getCellType()))
+							questionAnswerDTO.setDescription(currentCell.getRichStringCellValue().getString());
+						else
+							questionAnswerDTO.setDescription(String.valueOf(currentCell.getNumericCellValue()));
+						questionAnswerDTO.setCorrect(workbook.getFontAt(currentCell.getCellStyle().getFontIndexAsInt()).getBold());
+						questionAnswerDTOs.add(questionAnswerDTO);
+					}
+					else if(cellIdx == 6){
+						question.setType(Objects.equals(currentCell.getStringCellValue().trim(), "X") ? QuestionTypeEnum.THEORIM.getCode():QuestionTypeEnum.WETGEVING.getCode());
+					}
+					else if(cellIdx == 8 && Objects.equals(currentCell.getStringCellValue().trim(), "X")){
+						QuestionCategoryDTO questionCategoryDTO = new QuestionCategoryDTO();
+						questionCategoryDTO.setCode("CAT1");
+						questionCategories.add(questionCategoryDTO);
+					}
+					else if(cellIdx == 9 && Objects.equals(currentCell.getStringCellValue().trim(), "X")){
+						QuestionCategoryDTO questionCategoryDTO = new QuestionCategoryDTO();
+						questionCategoryDTO.setCode("CAT2");
+						questionCategories.add(questionCategoryDTO);
+					}
+					else if(cellIdx == 10 && Objects.equals(currentCell.getStringCellValue().trim(), "X")){
+						QuestionCategoryDTO questionCategoryDTO = new QuestionCategoryDTO();
+						questionCategoryDTO.setCode("CAT3");
+						questionCategories.add(questionCategoryDTO);
+					}
+					else if(cellIdx == 11 && Objects.equals(currentCell.getStringCellValue().trim(), "X")){
+						QuestionCategoryDTO questionCategoryDTO = new QuestionCategoryDTO();
+						questionCategoryDTO.setCode("CAT4");
+						questionCategories.add(questionCategoryDTO);
+					}
+					else if(cellIdx == 12)
+						question.setGroup(String.valueOf(currentCell.getNumericCellValue()).substring(0, String.valueOf(currentCell.getNumericCellValue()).length() - 2));
+
+					else if((12 < cellIdx && cellIdx < 17) && Objects.equals(currentCell.getStringCellValue().trim(), "X")){
+						question.setLabel("A");
+					}
+
+					else if((16 < cellIdx && cellIdx < 21) && Objects.equals(currentCell.getStringCellValue().trim(), "X")){
+						question.setLabel("B");
+					}
+
+
+					cellIdx++;
+				}
+				question.setQuestionAnswers(questionAnswerDTOs);
+				question.setQuestionCategories(questionCategories);
+				saveQuestion(question);
+				System.out.println(rowNumber+"-"+ question);
+				rowNumber++;
+
+			}
+
+			workbook.close();
+
+			code = ResponseCodeEnum.SUCCESS.getCode();
+			description = "Upload Successfully";
+		} catch (Exception e) {
+			log.error(e.getMessage());
+		}
+		return new ResponseDTO<>(code, description);
 	}
 
 }
