@@ -210,6 +210,30 @@ var findDetailByCodeForQuestion = (code, callback) => {
     callToserver(url, method, {code: code}, successFunction, failedFunction);
 
 };
+
+
+var uploadFile = ()=>{
+    var fd = new FormData();
+    var files = $('#file')[0].files;
+
+    // Check file selected or not
+    if(files.length > 0 ){
+        fd.append('file',files[0]);
+
+        $.ajax({
+            url: '/question/upload',
+            type: 'post',
+            data: fd,
+            contentType: false,
+            processData: false,
+            success: function(response){
+                alert(response);
+            }
+        });
+    }else{
+        alert("Please select a file.");
+    }
+};
 /*-------------------------------- Reference Data , Data Table and Common --------------------*/
 var populateFormForQuestion = (data) => {
     if (data) {
@@ -445,6 +469,10 @@ var evenBinderForQuestion = () => {
 
     $("#btnDelete").off().on("click", function () {
         deleteForQuestion();
+    });
+
+    $("#btnUpload").off().on("click", function () {
+        uploadFile();
     });
 
 

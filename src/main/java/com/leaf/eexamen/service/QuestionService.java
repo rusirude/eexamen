@@ -4,6 +4,7 @@ import com.leaf.eexamen.dto.QuestionDTO;
 import com.leaf.eexamen.dto.common.DataTableRequestDTO;
 import com.leaf.eexamen.dto.common.DataTableResponseDTO;
 import com.leaf.eexamen.dto.common.ResponseDTO;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 
@@ -48,4 +49,6 @@ public interface QuestionService {
 	 * @return {@link DataTableResponseDTO}
 	 */
 	DataTableResponseDTO getQuestionsForDataTable(DataTableRequestDTO dataTableRequestDTO);
+
+	ResponseDTO<?> uploadExcel(MultipartFile file);
 }

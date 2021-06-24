@@ -298,7 +298,7 @@ public class QuestionDAOImpl implements QuestionDAO {
 
 
 		if("code".equals(sortColumnName)) {
-			ex = root.get(QuestionEntity_.code);
+			ex = root.get(QuestionEntity_.id);
 		}
 		else if("description".equals(sortColumnName)) {
 			ex = root.get(QuestionEntity_.description);
@@ -314,6 +314,9 @@ public class QuestionDAOImpl implements QuestionDAO {
 		}
 		else if("updatedBy".equals(sortColumnName)) {
 			ex = root.get(QuestionEntity_.updatedBy);
+		}
+		else{
+			ex = root.get(QuestionEntity_.id);
 		}
 
 		orders.add(("asc".equals(sortOrder))? cb.asc(ex):cb.desc(ex));
