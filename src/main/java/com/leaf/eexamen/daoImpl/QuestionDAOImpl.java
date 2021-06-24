@@ -298,7 +298,7 @@ public class QuestionDAOImpl implements QuestionDAO {
 
 
 		if("code".equals(sortColumnName)) {
-			ex = root.get(QuestionEntity_.code);
+			ex = root.get(QuestionEntity_.id);
 		}
 		else if("description".equals(sortColumnName)) {
 			ex = root.get(QuestionEntity_.description);
